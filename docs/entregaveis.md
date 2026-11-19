@@ -15,6 +15,8 @@
 | **ODS** | **ODS 10:** leva as oportunidades gratuitas a quem mais precisa e reduz a barreira de não saber onde procurar. **ODS 11:** melhor uso dos espaços e serviços comunitários, com dados para planejar a oferta |
 | **Simples, segura e inclusiva** | Texto livre no lugar de formulários complexos; funciona no celular; CPF e nome nunca chegam aos dados analíticos (LGPD); sem dependências externas para rodar |
 
+> **Dados de demonstração:** o catálogo de serviços e instituições e o histórico de 90 dias do data lake (agosto a novembro de 2026) são **fictícios**. O histórico foi gerado por um simulador (`src/dados/gerar-historico.js`) que usa o agente de IA real e insere erros de propósito para o ETL tratar. Os eventos produzidos pelo uso real do sistema entram no mesmo pipeline.
+
 Todas as áreas resolvem o mesmo problema e estão **integradas**: a IA usa o saldo de vagas em tempo real, os sensores alimentam o catálogo e o dashboard, cada busca e reserva vai para o data lake, e o dashboard de Big Data mostrou o ponto fraco que levou à versão 2 da IA.
 
 ## 2. Arquitetura geral
@@ -83,7 +85,7 @@ O prompt completo, com entrada, vocabulário, privacidade, formato de saída e e
 
 ### 04 · Lógica e ganho: antes × depois
 
-Medimos com um gabarito de perfis rotulados (o serviço que um atendente social indicaria). Os 16 perfis de **validação** nunca foram usados para ajustar a IA. Para reproduzir: `npm run ia:avaliar`.
+Medimos com um gabarito de perfis rotulados pela equipe, seguindo o critério "o serviço que um atendente social indicaria". O gabarito não foi validado por profissionais da área; esse é um próximo passo. Os 16 perfis de **validação** nunca foram usados para ajustar a IA. Para reproduzir: `npm run ia:avaliar`.
 
 | Métrica (validação) | Antes: mural sem IA | Agente v1 | **Agente v2** |
 |---|---:|---:|---:|
@@ -101,7 +103,7 @@ Medimos com um gabarito de perfis rotulados (o serviço que um atendente social 
 
 ### 01 · Estrutura dos dados
 
-**Data lake em camadas (arquitetura medalhão):**
+**Data lake em camadas (arquitetura medalhão).** Os volumes abaixo vêm do histórico simulado de 90 dias:
 
 - **Bronze:** eventos brutos e imutáveis em JSON Lines, particionados por `tipo/dt=data`. São 43.635 eventos.
 - **Prata:** dados validados, sem duplicados e com datas normalizadas. São 43.086 registros.

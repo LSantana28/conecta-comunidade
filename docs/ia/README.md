@@ -63,7 +63,7 @@ Prints: `docs/evidencias/01-recomendacoes.png`, `02` e `03` (agendamento), `04` 
 
 ## 4. Lógica e ganho: antes × depois
 
-**Como medimos.** Montamos um gabarito: perfis escritos como cidadãos escrevem, cada um marcado com os serviços que um atendente social indicaria. Comparamos três situações:
+**Como medimos.** Montamos um gabarito: perfis escritos como cidadãos escrevem, cada um marcado pela equipe com os serviços que um atendente social indicaria. O gabarito ainda não foi validado por profissionais da área. Comparamos três situações:
 
 - **Antes, sem IA:** mural de vagas. A pessoa escolhe a categoria e lê os 3 primeiros serviços na ordem em que foram publicados.
 - **Agente v1:** o protótipo original.
