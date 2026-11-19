@@ -5,8 +5,9 @@ import path from "node:path";
 import { medir, muralSemIA, agente, PERFIS_ROTULADOS, PERFIS_VALIDACAO } from "../src/core/avaliacao.js";
 import { avaliar } from "../src/core/recomendacao.js";
 import { catalogoInicial, NOMES_TURNO } from "../src/core/catalogo.js";
+import { RAIZ } from "../src/caminhos.js";
 
-const saida = path.resolve("docs/ia/evidencias");
+const saida = path.join(RAIZ, "docs/ia/evidencias");
 fs.mkdirSync(saida, { recursive: true });
 const cat = catalogoInicial();
 const lotado = cat.map(s => (s.id === "SRV-06" ? { ...s, vagas: 0 } : s));
@@ -84,4 +85,4 @@ const exemplos = [
 fs.writeFileSync(path.join(saida, "exemplos-entrada-saida.json"), JSON.stringify(exemplos, null, 2));
 
 console.log(md);
-console.log(`Arquivos gravados em ${path.relative(process.cwd(), saida)}/`);
+console.log(`Arquivos gravados em ${path.relative(RAIZ, saida)}/`);

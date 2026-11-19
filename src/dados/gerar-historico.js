@@ -16,6 +16,7 @@ import { avaliar } from "../core/recomendacao.js";
 import { catalogoInicial, NOMES_TURNO } from "../core/catalogo.js";
 import { isoLocal } from "./ingestao.js";
 import { partesLocais, cicloDe } from "./esquema.js";
+import { pastaDatalake, RAIZ } from "../caminhos.js";
 
 const ARQUIVO = "eventos-historico.jsonl";
 
@@ -247,10 +248,10 @@ function removerHistoricoAnterior(raiz) {
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   const arg = (nome, padrao) => { const i = process.argv.indexOf(`--${nome}`); return i > 0 ? process.argv[i + 1] : padrao; };
-  const dir = path.resolve(process.env.DATALAKE_DIR || "datalake");
+  const dir = pastaDatalake();
   const t0 = Date.now();
   const r = gerarHistorico({ dir, dias: Number(arg("dias", 90)), fim: arg("fim", "2026-11-18"), semente: Number(arg("semente", 2026)) });
-  console.log(`Histórico gerado em ${dir}/bronze (${r.inicio} a ${r.fim})`);
+  console.log(`Histórico gerado em ${path.relative(RAIZ, path.join(dir, "bronze")) || "."} (${r.inicio} a ${r.fim})`);
   console.log(`Eventos: ${r.total.toLocaleString("pt-BR")} · arquivos: ${r.arquivos} · registros sujos propositais: ${r.sujos}`);
   for (const [t, n] of Object.entries(r.porTipo)) console.log(`  ${t.padEnd(13)} ${n.toLocaleString("pt-BR")}`);
   console.log(`Tempo: ${((Date.now() - t0) / 1000).toFixed(1)} s`);
