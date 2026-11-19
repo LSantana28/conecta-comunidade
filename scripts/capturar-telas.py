@@ -12,8 +12,8 @@ erros_console = []
 with sync_playwright() as p:
     nav = p.chromium.launch(executable_path=os.environ.get("CHROME_PATH") or None)
     pg = nav.new_page(viewport={"width": 1280, "height": 900})
-    # 400/401 são esperados (testes de validação e de login negado)
-    pg.on("console", lambda m: m.type == "error" and not any(c in m.text for c in ("400", "401")) and erros_console.append(m.text))
+    # 400/401/409 são esperados (validação, login negado e reserva duplicada bloqueada)
+    pg.on("console", lambda m: m.type == "error" and not any(c in m.text for c in ("400", "401", "409")) and erros_console.append(m.text))
     pg.on("pageerror", lambda e: erros_console.append(str(e)))
     shot = lambda nome: pg.screenshot(path=os.path.join(SAIDA, nome), full_page=True)
 
@@ -23,14 +23,27 @@ with sync_playwright() as p:
     pg.wait_for_selector(".card .score")
     shot("01-recomendacoes.png")
 
-    # 2. Agendar a 1ª recomendação
-    pg.click(".card [data-reservar] >> nth=0")
+    # 2. Agendar a 1ª recomendação (CPF fictício válido, usado só nesta demonstração)
+    CPF = "529.982.247-25"
+    servico = pg.get_attribute(".card [data-reservar] >> nth=0", "data-reservar")
+    pg.click(f'[data-reservar="{servico}"]')
     pg.wait_for_selector("dialog[open]")
+    pg.fill("#dialogoDocumento", CPF)
     shot("02-confirmar-agendamento.png")
     pg.click("#dialogoOk")
     pg.wait_for_selector("#toast.visivel")
     pg.wait_for_timeout(400)
     shot("03-reserva-confirmada.png")
+    pg.wait_for_selector("#toast.visivel", state="detached", timeout=6000)
+
+    # 2b. Mesma pessoa tenta reservar de novo o mesmo serviço: bloqueado
+    pg.click(f'[data-reservar="{servico}"]')
+    pg.wait_for_selector("dialog[open]")
+    pg.fill("#dialogoDocumento", CPF)
+    pg.click("#dialogoOk")
+    pg.wait_for_selector("#toast.visivel")
+    pg.wait_for_timeout(400)
+    shot("12-reserva-duplicada-bloqueada.png")
     pg.wait_for_selector("#toast.visivel", state="detached", timeout=6000)
 
     # 3. Validação de entrada (segurança) — nome com HTML

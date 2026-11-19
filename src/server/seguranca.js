@@ -51,14 +51,33 @@ export function validarPerfil(body) {
   };
 }
 
+// CPF: confere formato e os dois dígitos verificadores (rejeita 000.000.000-00 etc.)
+export function cpfValido(valor) {
+  const d = String(valor ?? "").replace(/\D/g, "");
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  const dv = n => {
+    let soma = 0;
+    for (let i = 0; i < n; i++) soma += Number(d[i]) * (n + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return dv(9) === Number(d[9]) && dv(10) === Number(d[10]);
+}
+
+// O CPF nunca é armazenado: vira um código HMAC que só serve para reconhecer a mesma pessoa
+export function chaveDocumento(cpf, segredo) {
+  return crypto.createHmac("sha256", segredo).update("cpf:" + String(cpf).replace(/\D/g, "")).digest("hex");
+}
+
 export function validarReserva(body) {
   const erros = {};
   const nome = texto(body?.nome);
   if (!ID_SERVICO_REGEX.test(texto(body?.id_servico))) erros.id_servico = "Serviço inválido.";
   if (!NOME_REGEX.test(nome)) erros.nome = "Informe um nome com 2 a 60 letras.";
+  if (!cpfValido(body?.documento)) erros.documento = "Informe um CPF válido.";
   if (Object.keys(erros).length) throw new ErroValidacao(erros);
-  // LGPD — minimização: só o primeiro nome é armazenado
-  return { id_servico: body.id_servico.trim(), primeiroNome: nome.split(/\s+/)[0] };
+  // LGPD — minimização: só o primeiro nome é armazenado; o CPF só é usado para gerar a chave
+  return { id_servico: body.id_servico.trim(), primeiroNome: nome.split(/\s+/)[0], cpf: String(body.documento).replace(/\D/g, "") };
 }
 
 export function validarLeituraIoT(body) {

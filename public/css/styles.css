@@ -174,3 +174,4 @@ details.panel summary { font-size: 0.95rem; }
 .mapa-calor td small { display: block; font-weight: 500; font-size: 0.7rem; opacity: 0.85; }
 #gTurno .mapa-calor td { height: 46px; min-width: 64px; }
 .calculo { font-size: 0.8rem; color: var(--muted); margin: 0; background: #f8fafc; border-radius: 6px; padding: 6px 8px; }
+.ajuda { font-size: 0.75rem; color: var(--muted); margin: 4px 0 0; }

@@ -24,7 +24,7 @@ async function chamar(metodo, url, corpo, autenticado = false) {
 export const api = {
   servicos: () => chamar("GET", "/api/servicos"),
   recomendar: perfil => chamar("POST", "/api/recomendacoes", perfil),
-  reservar: (id_servico, nome) => chamar("POST", "/api/reservas", { id_servico, nome }),
+  reservar: (id_servico, nome, documento) => chamar("POST", "/api/reservas", { id_servico, nome, documento }),
   reserva: protocolo => chamar("GET", `/api/reservas/${encodeURIComponent(protocolo)}`),
   cancelar: protocolo => chamar("POST", `/api/reservas/${encodeURIComponent(protocolo)}/cancelar`),
   salas: () => chamar("GET", "/api/iot/salas"),
@@ -48,8 +48,8 @@ export const minhasReservas = {
   remover(protocolo) { armazenamento.gravar(CHAVE_RESERVAS, minhasReservas.listar().filter(p => p !== protocolo)); }
 };
 
-export async function agendar(servico, nome) {
-  const { reserva, vagasRestantes } = await api.reservar(servico.id, nome);
+export async function agendar(servico, { nome, documento }) {
+  const { reserva, vagasRestantes } = await api.reservar(servico.id, nome, documento);
   minhasReservas.adicionar(reserva.protocolo);
   return { reserva, vagasRestantes };
 }

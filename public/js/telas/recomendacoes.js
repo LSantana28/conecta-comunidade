@@ -125,10 +125,10 @@ export function render(el) {
     if (!btn) return;
     const rec = ultimoResultado.saida.recomendacoes.find(r => r.id_servico === btn.dataset.reservar);
     const servico = { id: rec.id_servico, titulo: rec.titulo, instituicao: rec.instituicao, turno: rec.turno };
-    const nome = await confirmarAgendamento(servico, form.elements.cidadao.value.trim());
-    if (!nome) return;
+    const dados = await confirmarAgendamento(servico, form.elements.cidadao.value.trim());
+    if (!dados) return;
     try {
-      const { reserva } = await agendar(servico, nome);
+      const { reserva } = await agendar(servico, dados);
       toast(`Vaga reservada! Protocolo ${reserva.protocolo}`);
       executar(); // recalcula com o novo saldo (Regra 4)
     } catch (e) { toast(e.message); }
