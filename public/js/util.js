@@ -58,16 +58,38 @@ export function toast(msg) {
 }
 
 // Diálogo de confirmação de agendamento (pede o nome do cidadão)
+// Mesma validação de CPF do servidor (dígitos verificadores) para avisar antes de enviar
+export function cpfValido(valor) {
+  const d = String(valor ?? "").replace(/\D/g, "");
+  if (d.length !== 11 || /^(\d)\1{10}$/.test(d)) return false;
+  const dv = n => {
+    let soma = 0;
+    for (let i = 0; i < n; i++) soma += Number(d[i]) * (n + 1 - i);
+    const resto = (soma * 10) % 11;
+    return resto === 10 ? 0 : resto;
+  };
+  return dv(9) === Number(d[9]) && dv(10) === Number(d[10]);
+}
+
+function mascaraCpf(v) {
+  const d = v.replace(/\D/g, "").slice(0, 11);
+  return d.replace(/^(\d{3})(\d)/, "$1.$2").replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3").replace(/\.(\d{3})(\d{1,2})$/, ".$1-$2");
+}
+
+// Diálogo de agendamento: devolve { nome, documento } ou null se cancelado
 export function confirmarAgendamento(servico, nomeSugerido = "") {
   const dlg = document.getElementById("dialogo");
   const nome = document.getElementById("dialogoNome");
+  const documento = document.getElementById("dialogoDocumento");
+  documento.value = "";
+  documento.oninput = () => { documento.value = mascaraCpf(documento.value); };
   const erro = document.getElementById("dialogoErro");
   document.getElementById("dialogoTexto").textContent =
     `${servico.titulo} — ${servico.instituicao} (${NOMES_TURNO[servico.turno]}).`;
   nome.value = nomeSugerido;
   erro.hidden = true;
   dlg.showModal();
-  nome.focus();
+  (nomeSugerido ? documento : nome).focus();
 
   return new Promise(resolve => {
     const form = document.getElementById("formDialogo");
@@ -78,7 +100,10 @@ export function confirmarAgendamento(servico, nomeSugerido = "") {
       ev.preventDefault();
       const v = nome.value.trim();
       if (!/^[\p{L}][\p{L} '.-]{1,59}$/u.test(v)) { erro.textContent = "Informe um nome válido (2 a 60 letras)."; erro.hidden = false; return; }
-      limpar(); dlg.close(); resolve(v);
+      if (!cpfValido(documento.value)) { erro.textContent = "Informe um CPF válido."; erro.hidden = false; documento.focus(); return; }
+      const doc = documento.value.replace(/\D/g, "");
+      documento.value = ""; // não deixa o CPF na tela depois de enviar
+      limpar(); dlg.close(); resolve({ nome: v, documento: doc });
     }
     form.addEventListener("submit", enviar);
     cancelar.addEventListener("click", fechar);

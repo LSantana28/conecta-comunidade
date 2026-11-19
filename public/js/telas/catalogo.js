@@ -30,10 +30,10 @@ export async function render(el) {
     const btn = ev.target.closest("[data-reservar]");
     if (!btn) return;
     const servico = servicos.find(s => s.id === btn.dataset.reservar);
-    const nome = await confirmarAgendamento(servico);
-    if (!nome) return;
+    const dados = await confirmarAgendamento(servico);
+    if (!dados) return;
     try {
-      const { reserva } = await agendar(servico, nome);
+      const { reserva } = await agendar(servico, dados);
       toast(`Vaga reservada! Protocolo ${reserva.protocolo}`);
       await carregar(el);
     } catch (e) { toast(e.message); }

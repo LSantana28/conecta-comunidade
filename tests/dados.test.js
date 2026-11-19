@@ -13,6 +13,7 @@ import { validarEvento } from "../src/dados/esquema.js";
 import * as M from "../src/dados/medidas.js";
 import { criarApp } from "../src/server/app.js";
 import { gerarHashSenha } from "../src/server/seguranca.js";
+import { gerarCpf } from "./apoio.js";
 
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "lake-"));
 const lerJsonl = arq => fs.readFileSync(arq, "utf8").trim().split("\n").filter(Boolean).map(l => JSON.parse(l));
@@ -146,12 +147,13 @@ describe("Análises e API (camada ouro)", () => {
     assert.ok(d.serieDiaria.length === 18 && d.mapaCalor.length > 0);
 
     // Uma reserva real gera um evento bronze, sem o nome do cidadão
-    await fetch(`${base}/api/reservas`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id_servico: "SRV-01", nome: "Joana Teste" }) });
+    await fetch(`${base}/api/reservas`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id_servico: "SRV-01", nome: "Joana Teste", documento: gerarCpf(9) }) });
     await new Promise(res => setTimeout(res, 100));
     const arquivos = fs.readdirSync(path.join(dir, "bronze", "reserva"), { recursive: true }).filter(f => String(f).endsWith("eventos.jsonl"));
     assert.equal(arquivos.length, 1);
     const conteudo = fs.readFileSync(path.join(dir, "bronze", "reserva", String(arquivos[0])), "utf8");
     assert.match(conteudo, /"resultado":"confirmada"/);
     assert.ok(!conteudo.includes("Joana"));
+    assert.ok(!conteudo.includes(gerarCpf(9)), "CPF não chega ao data lake");
   });
 });

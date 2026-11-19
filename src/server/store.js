@@ -9,6 +9,7 @@ const MAX_LEITURAS = 200;
 export function criarStore() {
   const servicos = catalogoInicial();
   const reservas = new Map();             // protocolo -> reserva
+  const chaves = new Map();               // protocolo -> chave HMAC do CPF (nunca sai do servidor)
   const demandaPorInteresse = {};         // interesse -> nº de buscas
   const recomendadoPorServico = {};       // id -> nº de vezes recomendado
   const leituras = [];                    // histórico IoT (últimas N)
@@ -34,10 +35,22 @@ export function criarStore() {
     },
 
     // Regra 4 — baixa imediata no saldo
-    reservar({ id_servico, primeiroNome }) {
+    // Regra: uma reserva ativa por pessoa (CPF) em cada serviço
+    reservaAtivaDe(chaveCidadao, id_servico) {
+      if (!chaveCidadao) return null;
+      for (const r of reservas.values()) {
+        if (r.id_servico === id_servico && r.status === "confirmada" && chaves.get(r.protocolo) === chaveCidadao) return r;
+      }
+      return null;
+    },
+
+    reservar({ id_servico, primeiroNome, chaveCidadao }) {
       const servico = this.buscarServico(id_servico);
       if (!servico) return { erro: "Serviço não encontrado.", status: 404 };
-      if (servico.vagas <= 0) return { erro: "Não há mais vagas neste serviço.", status: 409 };
+      if (this.reservaAtivaDe(chaveCidadao, id_servico)) {
+        return { erro: "Este CPF já tem uma reserva ativa neste serviço. Cada pessoa pode reservar uma vaga por serviço; para trocar, cancele a anterior em \"Meus agendamentos\".", status: 409, motivo: "duplicada" };
+      }
+      if (servico.vagas <= 0) return { erro: "Não há mais vagas neste serviço.", status: 409, motivo: "sem_vaga" };
       servico.vagas -= 1;
       const protocolo = "CC-" + crypto.randomBytes(3).toString("hex").toUpperCase();
       const reserva = {
@@ -45,6 +58,7 @@ export function criarStore() {
         turno: servico.turno, sala: servico.sala, primeiroNome, status: "confirmada", criadaEm: new Date().toISOString()
       };
       reservas.set(protocolo, reserva);
+      if (chaveCidadao) chaves.set(protocolo, chaveCidadao);
       metricas.reservas += 1;
       return { reserva, vagasRestantes: servico.vagas };
     },

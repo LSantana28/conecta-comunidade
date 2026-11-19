@@ -3,7 +3,7 @@ import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import {
   validarPerfil, validarReserva, validarLeituraIoT, ErroValidacao, escaparHtml,
-  gerarHashSenha, conferirSenha, assinarToken, verificarToken, criarRateLimiter, mascararNome, chaveDispositivoValida
+  gerarHashSenha, conferirSenha, cpfValido, assinarToken, verificarToken, criarRateLimiter, mascararNome, chaveDispositivoValida
 } from "../src/server/seguranca.js";
 import { estadoInicial, proximaLeitura } from "../src/iot/simulador.js";
 
@@ -14,7 +14,9 @@ describe("Segurança — validação de entrada", () => {
     assert.throws(() => validarPerfil({ ...PERFIL_OK, cidadao: "<script>alert(1)</script>" }), ErroValidacao);
     assert.throws(() => validarPerfil({ ...PERFIL_OK, turno_disponivel: "madrugada" }), ErroValidacao);
     assert.throws(() => validarPerfil({ ...PERFIL_OK, descricao_livre: "x".repeat(501) }), ErroValidacao);
-    assert.throws(() => validarReserva({ id_servico: "SRV-01; DROP TABLE", nome: "Ana" }), ErroValidacao);
+    assert.throws(() => validarReserva({ id_servico: "SRV-01; DROP TABLE", nome: "Ana", documento: "529.982.247-25" }), ErroValidacao);
+    assert.throws(() => validarReserva({ id_servico: "SRV-01", nome: "Ana", documento: "529.982.247-24" }), ErroValidacao, "dígito verificador errado");
+    assert.ok(cpfValido("529.982.247-25") && !cpfValido("000.000.000-00") && !cpfValido("123"));
     const ok = validarPerfil({ ...PERFIL_OK, cidadao: "  José D'Ávila  ", extra: "ignorado" });
     assert.equal(ok.cidadao, "José D'Ávila");
     assert.equal(ok.extra, undefined, "campos fora da whitelist são descartados");
@@ -22,7 +24,7 @@ describe("Segurança — validação de entrada", () => {
 
   test("CT08b — Escape de HTML e LGPD (minimização e máscara)", () => {
     assert.equal(escaparHtml(`<img src=x onerror="a">`), "&lt;img src=x onerror=&quot;a&quot;&gt;");
-    assert.equal(validarReserva({ id_servico: "SRV-01", nome: "Maria Aparecida Silva" }).primeiroNome, "Maria");
+    assert.equal(validarReserva({ id_servico: "SRV-01", nome: "Maria Aparecida Silva", documento: "52998224725" }).primeiroNome, "Maria");
     assert.equal(mascararNome("Maria"), "M****");
   });
 });

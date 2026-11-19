@@ -4,6 +4,7 @@ import assert from "node:assert/strict";
 import http from "node:http";
 import { criarApp } from "../src/server/app.js";
 import { gerarHashSenha } from "../src/server/seguranca.js";
+import { gerarCpf } from "./apoio.js";
 
 const CONFIG = {
   adminUser: "admin", adminPasswordHash: gerarHashSenha("senha-teste"),
@@ -41,7 +42,7 @@ describe("API — fluxo do cidadão", () => {
     const escolhido = rec.dados.saida.recomendacoes[0];
 
     const antes = (await req("GET", "/api/servicos")).dados.servicos.find(s => s.id === escolhido.id_servico).vagas;
-    const reserva = await req("POST", "/api/reservas", { id_servico: escolhido.id_servico, nome: "Maria Silva" });
+    const reserva = await req("POST", "/api/reservas", { id_servico: escolhido.id_servico, nome: "Maria Silva", documento: gerarCpf(1) });
     assert.equal(reserva.status, 201);
     assert.match(reserva.dados.reserva.protocolo, /^CC-[0-9A-F]{6}$/);
     assert.equal(reserva.dados.reserva.primeiroNome, "Maria", "só o primeiro nome é guardado (LGPD)");
@@ -58,12 +59,39 @@ describe("API — fluxo do cidadão", () => {
 
   test("CT07 — Serviço esgotado retorna 409 e some das recomendações", async () => {
     let ultima;
-    for (let i = 0; i < 4; i++) ultima = await req("POST", "/api/reservas", { id_servico: "SRV-06", nome: "Pessoa Teste" });
+    for (let i = 0; i < 4; i++) ultima = await req("POST", "/api/reservas", { id_servico: "SRV-06", nome: "Pessoa Teste", documento: gerarCpf(100 + i) });
     assert.equal(ultima.dados.vagasRestantes, 0);
-    const extra = await req("POST", "/api/reservas", { id_servico: "SRV-06", nome: "Pessoa Teste" });
+    const extra = await req("POST", "/api/reservas", { id_servico: "SRV-06", nome: "Pessoa Teste", documento: gerarCpf(200) });
     assert.equal(extra.status, 409);
     const rec = await req("POST", "/api/recomendacoes", { ...PERFIL, situacao_atual: "Precisando de atendimento social ou jurídico", interesse_principal: "Apoio social e jurídico", descricao_livre: "apoio jurídico advogado" });
     assert.ok(!rec.dados.saida.recomendacoes.some(r => r.id_servico === "SRV-06"));
+  });
+
+  test("CT26 — Uma reserva ativa por CPF em cada serviço; CPF inválido recusado; CPF nunca devolvido", async () => {
+    const cpf = gerarCpf(300);
+    const r1 = await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Ana Souza", documento: cpf });
+    assert.equal(r1.status, 201);
+    const saldo = r1.dados.vagasRestantes;
+    // mesma pessoa, mesmo serviço — mesmo com outro nome e CPF formatado: bloqueado e sem consumir vaga
+    const r2 = await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Ana S", documento: cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4") });
+    assert.equal(r2.status, 409);
+    assert.match(r2.dados.erro, /já tem uma reserva ativa/);
+    assert.equal((await req("GET", "/api/servicos")).dados.servicos.find(s => s.id === "SRV-01").vagas, saldo, "tentativa duplicada não consome vaga");
+    // mesma pessoa em OUTRO serviço: permitido
+    assert.equal((await req("POST", "/api/reservas", { id_servico: "SRV-02", nome: "Ana Souza", documento: cpf })).status, 201);
+    // outra pessoa no mesmo serviço: permitido
+    assert.equal((await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Bia Lima", documento: gerarCpf(301) })).status, 201);
+    // depois de cancelar, a mesma pessoa pode reservar de novo
+    await req("POST", `/api/reservas/${r1.dados.reserva.protocolo}/cancelar`);
+    assert.equal((await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Ana Souza", documento: cpf })).status, 201);
+    // CPF inválido e ausente
+    const inv = await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Caio", documento: "111.111.111-11" });
+    assert.equal(inv.status, 400);
+    assert.ok(inv.dados.campos.documento);
+    assert.equal((await req("POST", "/api/reservas", { id_servico: "SRV-01", nome: "Caio" })).status, 400);
+    // o CPF não aparece em nenhuma resposta
+    const consulta = await req("GET", `/api/reservas/${r1.dados.reserva.protocolo}`);
+    assert.ok(!JSON.stringify([r1.dados, consulta.dados]).includes(cpf));
   });
 
   test("CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande", async () => {

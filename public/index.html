@@ -33,6 +33,9 @@
       <p id="dialogoTexto"></p>
       <label for="dialogoNome">Seu nome</label>
       <input id="dialogoNome" maxlength="60" required autocomplete="given-name" />
+      <label for="dialogoDocumento">CPF</label>
+      <input id="dialogoDocumento" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" autocomplete="off" required />
+      <p class="ajuda">Usado só para garantir uma vaga por pessoa em cada serviço. O CPF não fica guardado.</p>
       <p class="erro" id="dialogoErro" hidden></p>
       <div class="acoes-dialogo">
         <button value="cancelar" type="button" class="btn-sec" id="dialogoCancelar">Cancelar</button>
