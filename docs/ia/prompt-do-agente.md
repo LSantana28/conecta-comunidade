@@ -125,7 +125,7 @@ Além do agente, estas automações rodam sozinhas, sem ninguém precisar aciona
 
 | # | Gatilho | Ação automática | Onde |
 |---|---|---|---|
-| A1 | Cidadão confirma agendamento | Baixa a vaga do saldo, gera protocolo `CC-XXXXXX` e reordena as recomendações seguintes | `store.reservar()` |
+| A1 | Cidadão confirma agendamento | Confere se o CPF já tem reserva ativa no serviço (uma vaga por pessoa); se não tem, baixa a vaga do saldo, gera protocolo `CC-XXXXXX` e reordena as recomendações seguintes | `store.reservar()` |
 | A2 | Cidadão cancela | Devolve a vaga ao saldo para a próxima pessoa | `store.cancelar()` |
 | A3 | Serviço chega a 0 vagas | Sai das recomendações e aparece como "Esgotado" no catálogo | Regra 1 |
 | A4 | Sensor registra a sala cheia ou acima da capacidade | Alerta "Lotação máxima" ou "Lotação excedida" no dashboard e no catálogo; LED vermelho no Arduino | `store.alertasDaSala()`, `no_sala.ino` |

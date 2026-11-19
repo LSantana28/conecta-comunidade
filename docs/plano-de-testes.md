@@ -1,10 +1,10 @@
 # Plano de testes — Conecta Comunidade
 
 **Ferramenta:** `node:test` (nativo do Node.js, sem dependências) · **Execução:** `npm test`
-**Automação:** roda a cada push/PR no GitHub Actions (Node 20 e 22) e dentro do `docker build`.
+**Automação:** roda a cada push/PR no GitHub Actions (Node 22 e 24) e dentro do `docker build`.
 **Evidências:** [`evidencias/execucao-testes.txt`](evidencias/execucao-testes.txt), [`evidencias/relatorio-testes-junit.xml`](evidencias/relatorio-testes-junit.xml), [`evidencias/smoke-test.txt`](evidencias/smoke-test.txt) e screenshots `01` a `08`.
 
-**Resultado da última execução:** 32 testes · 32 aprovados · 0 falhas.
+**Resultado da última execução:** 33 testes · 33 aprovados · 0 falhas.
 
 | ID | Tipo | Cenário | Passos / entrada | Resultado esperado | Status |
 |----|------|---------|------------------|--------------------|--------|
@@ -17,6 +17,7 @@
 | CT05 | Unitário (IA) | Perfil sem aderência | Descrição "gosto de música" | Lista vazia e encaminhamento ao acolhimento social | ✅ |
 | CT05b | Unitário (IA) | Normalização de texto | Mesma descrição em maiúsculas e sem acentos | Mesmos scores | ✅ |
 | CT06 | Integração (API) | **Fluxo completo** | Recomendar → reservar → consultar → cancelar | 201 com protocolo `CC-XXXXXX`; saldo −1 (Regra 4); cancelamento devolve a vaga; 2º cancelamento = 409 | ✅ |
+| CT26 | Integração (API) | Uma vaga por pessoa em cada serviço | Mesmo CPF 2× no SRV-01 (com outro nome e com máscara); mesmo CPF em outro serviço; outro CPF; recadastro após cancelar; CPF inválido ou ausente | 201 → 409 sem consumir vaga; outro serviço 201; outra pessoa 201; após cancelar 201; inválido/ausente 400; CPF nunca aparece nas respostas | ✅ |
 | CT07 | Integração (API) | Serviço esgotado | 5 reservas no SRV-06 (4 vagas) | 5ª reserva = 409; serviço sai das recomendações | ✅ |
 | CT08 | Unitário (segurança) | Validação de entrada | Nome `<script>…`, turno inválido, texto > 500, id com SQL | Todos rejeitados; campos extras descartados | ✅ |
 | CT08b | Unitário (segurança/LGPD) | Escape de HTML e minimização | Payload `<img onerror>`; nome completo | HTML escapado; só primeiro nome armazenado; nome mascarado | ✅ |
@@ -54,6 +55,7 @@ Roteiro automatizado em `scripts/capturar-telas.py` (Playwright), percorrendo as
 | E2E-05 | Catálogo | Abrir tela com simulador ligado | Ocupação das salas atualizando | `06-catalogo.png` |
 | E2E-06 | Login | Senha errada | "Usuário ou senha incorretos." | `07-login-negado.png` |
 | E2E-07 | Dashboard | Login correto | KPIs, utilização, demanda e leituras IoT | `08-dashboard.png` |
+| E2E-11 | Recomendações IA | Agendar com CPF e tentar de novo o mesmo serviço | Protocolo na 1ª vez; na 2ª, aviso "Este CPF já tem uma reserva ativa neste serviço" | `12-reserva-duplicada-bloqueada.png` |
 | E2E-10 | Recomendações IA | "Cenário 3: Renda" | Oficina de empreendedorismo com o cálculo da IA no card | `11-recomendacao-renda-v2.png` |
 | E2E-08 | Análises (Big Data) | Abrir a tela | Recomendações, 6 KPIs com variação, 4 gráficos | `09-analises-big-data.png` |
 | E2E-09 | Análises (Big Data) | Filtrar 90 dias + turno noite | Indicadores e gráficos recalculados, resumo do filtro | `10-analises-filtro-noite.png` |
