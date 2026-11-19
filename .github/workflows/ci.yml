@@ -29,9 +29,30 @@ jobs:
           name: relatorio-testes-node-${{ matrix.node }}
           path: test-results.xml
 
+  dados:
+    name: Pipeline de dados (bronze → prata → ouro)
+    needs: testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Gerar histórico e rodar o ETL
+        run: rm -rf datalake/bronze datalake/prata && npm run dados
+      - name: Checar qualidade mínima (>= 95% dos registros aproveitados)
+        run: node -e "const q=require('./datalake/ouro/_qualidade.json'); console.log(q); if(q.taxaAproveitamento<95) process.exit(1)"
+      - name: Publicar camada ouro e relatório de qualidade
+        uses: actions/upload-artifact@v4
+        with:
+          name: datalake-ouro
+          path: |
+            datalake/ouro
+            datalake/quarentena
+
   docker:
     name: Build da imagem + smoke test
-    needs: testes
+    needs: [testes, dados]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +65,7 @@ jobs:
             -e ADMIN_PASSWORD_HASH="$(node scripts/gerar-hash.js 'senha-do-pipeline-ci')" \
             -e TOKEN_SECRET="${{ github.run_id }}-segredo" \
             -e IOT_DEVICE_KEY="chave-ci" \
+            -e PSEUDONIMO_SECRET="pseudonimo-ci" \
             conecta-comunidade:${{ github.sha }}
           for i in $(seq 1 20); do
             [ "$(docker inspect -f '{{.State.Health.Status}}' conecta)" = "healthy" ] && break
