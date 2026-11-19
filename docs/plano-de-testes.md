@@ -4,7 +4,7 @@
 **Automação:** roda a cada push/PR no GitHub Actions (Node 20 e 22) e dentro do `docker build`.
 **Evidências:** [`evidencias/execucao-testes.txt`](evidencias/execucao-testes.txt), [`evidencias/relatorio-testes-junit.xml`](evidencias/relatorio-testes-junit.xml), [`evidencias/smoke-test.txt`](evidencias/smoke-test.txt) e screenshots `01` a `08`.
 
-**Resultado da última execução:** 21 testes · 21 aprovados · 0 falhas.
+**Resultado da última execução:** 27 testes · 27 aprovados · 0 falhas.
 
 | ID | Tipo | Cenário | Passos / entrada | Resultado esperado | Status |
 |----|------|---------|------------------|--------------------|--------|
@@ -28,11 +28,17 @@
 | CT13 | Unitário (segurança) | Rate limiter | 4 chamadas com limite 3 | 4ª bloqueada; libera na janela seguinte | ✅ |
 | CT13b | Integração (segurança) | Força bruta no login | 11 tentativas em 1 minuto | 11ª = 429 | ✅ |
 | CT14 | Integração (segurança) | Cabeçalhos e path traversal | `GET /` e `GET /%2e%2e/package.json` | CSP, nosniff, X-Frame-Options presentes; arquivo fora de `public/` não é servido | ✅ |
+| CT16 | Unitário (Big Data) | Funções analíticas | DIVIDE por zero, PERCENTILE 0,9, média móvel, variação sem base, DATEADD, RANKX denso, AVERAGEX com vazios | Valores exatos esperados | ✅ |
+| CT17 | Unitário (Big Data/LGPD) | Ingestão na camada bronze | Evento de busca com o nome "Maria Silva" | Gravado em `bronze/busca/dt=…`, fuso −03:00, sem o nome; pseudônimo estável e dependente do segredo | ✅ |
+| CT18 | Integração (ETL) | Qualidade bronze → prata | 12 linhas: 1 duplicada, 1 data legada, 999 °C, sala inexistente, JSON cortado | 1 duplicado removido, 1 data normalizada, 3 na quarentena com motivo | ✅ |
+| CT19 | Integração (ETL) | Modelagem da camada ouro | Busca → reserva 20 min depois → presença; passagens de sensor | Status "compareceu", atribuída à recomendação, turma correta; ocupação média 1,5 ponderada no tempo; CSV gerado | ✅ |
+| CT20 | Integração (Big Data) | Indicadores e filtros | Consulta padrão, turno noite e turno inválido | 6 KPIs com período anterior; filtro restringe serviços; 400 para filtro inválido; insights com decisão | ✅ |
+| CT21 | Integração (API) | API de análises + ingestão real | Sem token; com token e filtros; reserva feita pela API | 401; 200 com 18 dias de série; reserva gravada no bronze sem o nome | ✅ |
 | CT15 | Integração (DevOps) | Monitoramento | `GET /health` e `GET /metrics` | `status: ok`; métricas Prometheus de reservas, vagas e ocupação | ✅ |
 
 ## Testes manuais / E2E (navegador)
 
-Roteiro automatizado em `scripts/capturar-telas.py` (Playwright). Resultado: **nenhum erro no console** e CSP ativa.
+Roteiro automatizado em `scripts/capturar-telas.py` (Playwright), percorrendo as 6 telas. Resultado: **nenhum erro no console** e CSP ativa.
 
 | ID | Tela | Ação | Esperado | Evidência |
 |----|------|------|----------|-----------|
@@ -43,7 +49,13 @@ Roteiro automatizado em `scripts/capturar-telas.py` (Playwright). Resultado: **n
 | E2E-05 | Catálogo | Abrir tela com simulador ligado | Ocupação das salas atualizando | `06-catalogo.png` |
 | E2E-06 | Login | Senha errada | "Usuário ou senha incorretos." | `07-login-negado.png` |
 | E2E-07 | Dashboard | Login correto | KPIs, utilização, demanda e leituras IoT | `08-dashboard.png` |
+| E2E-08 | Análises (Big Data) | Abrir a tela | Recomendações, 6 KPIs com variação, 4 gráficos | `09-analises-big-data.png` |
+| E2E-09 | Análises (Big Data) | Filtrar 90 dias + turno noite | Indicadores e gráficos recalculados, resumo do filtro | `10-analises-filtro-noite.png` |
 
 ## Smoke test pós-deploy
 
-`node scripts/smoke.js` — roda no pipeline contra o container já de pé. Resultado em `evidencias/smoke-test.txt`: 6/6 checagens aprovadas.
+`node scripts/smoke.js` — roda no pipeline contra o container já de pé. Resultado em `evidencias/smoke-test.txt`: 7/7 checagens aprovadas.
+
+## Pipeline de dados
+
+O job **Pipeline de dados** do CI roda `npm run dados` e falha se menos de 95% dos registros do bronze forem aproveitados. Saída de referência em `big-data/evidencias/02-execucao-etl.txt`: 98,74%.

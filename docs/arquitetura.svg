@@ -39,7 +39,7 @@
   <rect class="caixa" x="278" y="132" width="194" height="40"/><text class="t" x="290" y="157">Recomendações IA</text>
   <rect class="caixa" x="278" y="180" width="194" height="40"/><text class="t" x="290" y="205">Catálogo de vagas</text>
   <rect class="caixa" x="278" y="228" width="194" height="40"/><text class="t" x="290" y="253">Meus agendamentos</text>
-  <rect class="caixa" x="278" y="276" width="194" height="40"/><text class="t" x="290" y="301">Login + Dashboard</text>
+  <rect class="caixa" x="278" y="276" width="194" height="40"/><text class="t" x="290" y="301">Dashboard + Análises</text>
   <text class="s" x="278" y="340">HTML + CSS + JS (módulos ES)</text>
   <text class="s" x="278" y="356">CSP · escape de HTML (anti-XSS)</text>
 
@@ -64,13 +64,13 @@
   <text class="s" x="560" y="337">serviços · reservas</text>
   <text class="s" x="560" y="352">leituras IoT · demanda</text>
   <rect class="caixa" x="738" y="294" width="174" height="70"/>
-  <text class="t" x="750" y="318">Analytics</text>
-  <text class="s" x="750" y="337">utilização, demanda,</text>
-  <text class="s" x="750" y="352">alertas de lotação</text>
+  <text class="t" x="750" y="318">Data lake + Analytics</text>
+  <text class="s" x="750" y="337">bronze → prata → ouro</text>
+  <text class="s" x="750" y="352">ETL · /api/admin/analises</text>
   <rect class="caixa" x="548" y="378" width="364" height="44"/>
   <text class="t" x="560" y="405">Monitoramento</text>
   <text class="s" x="668" y="405">/health · /metrics (Prometheus) · logs JSON</text>
-  <text class="s" x="548" y="450">MVP: dados em memória · Evolução: PostgreSQL + data lake</text>
+  <text class="s" x="548" y="450">Operação em memória · todo evento vai ao data lake (docs/big-data)</text>
 
   <!-- IOT -->
   <rect class="area" x="970" y="90" width="240" height="390"/>

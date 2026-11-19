@@ -3,43 +3,57 @@
 > node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml "tests/*.test.js"
 
 ▶ API — fluxo do cidadão
-  ✔ CT06 — Fluxo completo: recomendar → reservar (saldo -1) → consultar → cancelar (saldo +1) (34.840541ms)
-  ✔ CT07 — Serviço esgotado retorna 409 e some das recomendações (17.846206ms)
-  ✔ CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande (7.76374ms)
-✔ API — fluxo do cidadão (62.211109ms)
+  ✔ CT06 — Fluxo completo: recomendar → reservar (saldo -1) → consultar → cancelar (saldo +1) (51.558863ms)
+  ✔ CT07 — Serviço esgotado retorna 409 e some das recomendações (21.888513ms)
+  ✔ CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande (12.547467ms)
+✔ API — fluxo do cidadão (88.567168ms)
 ▶ API — segurança e gestão
-  ✔ CT09 — Dashboard exige login: sem token 401, senha errada 401, login correto 200 (91.396893ms)
-  ✔ CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação, excesso e temperatura (23.00335ms)
-  ✔ CT13b — Login bloqueado (429) após 10 tentativas por minuto (13.16834ms)
-  ✔ CT14 — Cabeçalhos de segurança (CSP etc.) e bloqueio de path traversal (3.819378ms)
-  ✔ CT15 — Monitoramento: /health responde ok e /metrics expõe métricas no formato Prometheus (2.770443ms)
-✔ API — segurança e gestão (134.927049ms)
+  ✔ CT09 — Dashboard exige login: sem token 401, senha errada 401, login correto 200 (116.146111ms)
+  ✔ CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação, excesso e temperatura (39.522005ms)
+  ✔ CT13b — Login bloqueado (429) após 10 tentativas por minuto (13.685799ms)
+  ✔ CT14 — Cabeçalhos de segurança (CSP etc.) e bloqueio de path traversal (5.765092ms)
+  ✔ CT15 — Monitoramento: /health responde ok e /metrics expõe métricas no formato Prometheus (8.542315ms)
+✔ API — segurança e gestão (184.365607ms)
+▶ Funções analíticas (equivalentes DAX)
+  ✔ CT16 — DIVIDE, PERCENTILE, média móvel, variação, DATEADD e RANKX (2.025703ms)
+✔ Funções analíticas (equivalentes DAX) (3.110374ms)
+▶ Ingestão (camada bronze)
+  ✔ CT17 — Grava eventos particionados por tipo/data e nunca grava dado pessoal (7.895436ms)
+✔ Ingestão (camada bronze) (8.094502ms)
+▶ ETL bronze → prata → ouro
+  ✔ CT18 — Qualidade: remove duplicados, normaliza datas e manda inválidos para a quarentena (0.498225ms)
+  ✔ CT19 — Ouro: status final, atribuição à recomendação e ocupação reconstruída pelo tempo (0.289928ms)
+✔ ETL bronze → prata → ouro (25.463584ms)
+▶ Análises e API (camada ouro)
+  ✔ CT20 — Indicadores respondem aos filtros e comparam com o período anterior (17.23029ms)
+  ✔ CT21 — API de análises exige login e a aplicação alimenta o data lake (174.905979ms)
+✔ Análises e API (camada ouro) (1317.970602ms)
 ▶ Agente de recomendação
-  ✔ CT01 — Cenário emprego recomenda os 3 serviços de capacitação, ordenados e acima do score mínimo (2.809378ms)
-  ✔ CT01b — Cenário social/jurídico no turno da tarde prioriza o plantão jurídico (0.370326ms)
-  ✔ CT02 — Regra 1: serviço sem vagas nunca é recomendado (0.193984ms)
-  ✔ CT03 — Regra 2: turno incompatível retira exatamente 20 pontos (0.132763ms)
-  ✔ CT04 — Regra 3: selo 'Últimas vagas' (<=5) e reforço de visibilidade para turma ociosa (0.12598ms)
-  ✔ CT05 — Perfil sem aderência: nenhuma recomendação e encaminha ao acolhimento (0.374402ms)
-  ✔ CT05b — Acentos e maiúsculas não alteram o resultado (0.340212ms)
-✔ Agente de recomendação (5.207216ms)
+  ✔ CT01 — Cenário emprego recomenda os 3 serviços de capacitação, ordenados e acima do score mínimo (3.410694ms)
+  ✔ CT01b — Cenário social/jurídico no turno da tarde prioriza o plantão jurídico (0.476128ms)
+  ✔ CT02 — Regra 1: serviço sem vagas nunca é recomendado (0.264681ms)
+  ✔ CT03 — Regra 2: turno incompatível retira exatamente 20 pontos (0.154744ms)
+  ✔ CT04 — Regra 3: selo 'Últimas vagas' (<=5) e reforço de visibilidade para turma ociosa (0.222321ms)
+  ✔ CT05 — Perfil sem aderência: nenhuma recomendação e encaminha ao acolhimento (0.46632ms)
+  ✔ CT05b — Acentos e maiúsculas não alteram o resultado (0.597744ms)
+✔ Agente de recomendação (6.745823ms)
 ▶ Segurança — validação de entrada
-  ✔ CT08 — Rejeita nome com script (XSS), opção fora da lista e texto longo (1.293585ms)
-  ✔ CT08b — Escape de HTML e LGPD (minimização e máscara) (0.273091ms)
-✔ Segurança — validação de entrada (2.273737ms)
+  ✔ CT08 — Rejeita nome com script (XSS), opção fora da lista e texto longo (1.247689ms)
+  ✔ CT08b — Escape de HTML e LGPD (minimização e máscara) (0.276171ms)
+✔ Segurança — validação de entrada (2.226841ms)
 ▶ Segurança — autenticação
-  ✔ CT10 — Senha com hash scrypt e token HMAC com expiração (126.155495ms)
-  ✔ CT13 — Rate limiter bloqueia após o limite e libera na próxima janela (1.180991ms)
-✔ Segurança — autenticação (127.621048ms)
+  ✔ CT10 — Senha com hash scrypt e token HMAC com expiração (114.397243ms)
+  ✔ CT13 — Rate limiter bloqueia após o limite e libera na próxima janela (0.811279ms)
+✔ Segurança — autenticação (115.413679ms)
 ▶ IoT — sensores simulados
-  ✔ CT12 — Leituras do simulador são aceitas pelo validador e ocupação fica entre 0 e a capacidade (6.141522ms)
-  ✔ CT12b — Validador IoT rejeita sala, sensor e temperatura inválidos; chave comparada com segurança (0.411627ms)
-✔ IoT — sensores simulados (6.846319ms)
-ℹ tests 21
-ℹ suites 6
-ℹ pass 21
+  ✔ CT12 — Leituras do simulador são aceitas pelo validador e ocupação fica entre 0 e a capacidade (3.898137ms)
+  ✔ CT12b — Validador IoT rejeita sala, sensor e temperatura inválidos; chave comparada com segurança (0.33316ms)
+✔ IoT — sensores simulados (4.444764ms)
+ℹ tests 27
+ℹ suites 10
+ℹ pass 27
 ℹ fail 0
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 562.513758
+ℹ duration_ms 2122.206396

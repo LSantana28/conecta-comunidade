@@ -1,0 +1,21 @@
+### datalake/bronze/busca/dt=2026-08-30/eventos-historico.jsonl
+{"evento_id":"a86a231a-6100-5df7-a72b-3555cb80c2cd","tipo":"busca","origem":"historico","ocorrido_em":"2026-08-30T22:13:50-03:00","ingerido_em":"2026-08-31T01:13:53.657Z","dados":{"perfil_hash":"a370a1a2b30d333c","situacao":"Precisando de atendimento social ou jurídico","interesse":"Apoio social e jurídico","turno":"manha","recomendados":[{"servico_id":"SRV-05","score":86,"posicao":1}]}}
+{"evento_id":"e8d66dad-85c7-ef97-743e-d89914388863","tipo":"busca","origem":"historico","ocorrido_em":"2026-08-30T16:08:04-03:00","ingerido_em":"2026-08-30T19:08:07.767Z","dados":{"perfil_hash":"bfcffaaff4807545","situacao":"Procurando emprego","interesse":"Capacitação profissional","turno":"noite","recomendados":[{"servico_id":"SRV-03","score":85,"posicao":1},{"servico_id":"SRV-02","score":77,"posicao":2},{"servico_id":"SRV-01","score":64,"posicao":3}]}}
+{"evento_id":"0d7f914e-5a2a-2a10-cee3-295d5c1c2b19","tipo":"busca","origem":"historico","ocorrido_em":"2026-08-30T13:32:37-03:00","ingerido_em":"2026-08-30T16:32:39.272Z","dados":{"perfil_hash":"0291e83367e378ea","situacao":"Querendo aprender novas habilidades","interesse":"Capacitação profissional","turno":"noite","recomendados":[]}}
+
+### datalake/bronze/reserva/dt=2026-08-30/eventos-historico.jsonl
+{"evento_id":"111d8208-837f-4b5f-e116-dde69d5b7cca","tipo":"reserva","origem":"historico","ocorrido_em":"2026-08-30T17:06:00-03:00","ingerido_em":"2026-08-30T20:06:02.464Z","dados":{"perfil_hash":"bce0f6091750a463","servico_id":"SRV-06","resultado":"confirmada","reserva_id":"CC-011FFE"}}
+
+### datalake/bronze/leitura_iot/dt=2026-09-01/eventos-historico.jsonl
+{"evento_id":"53818948-182f-daea-3390-0fc9449ade3e","tipo":"leitura_iot","origem":"historico","ocorrido_em":"2026-09-01T07:00:53-03:00","ingerido_em":"2026-09-01T10:00:53.607Z","dados":{"sala":"SALA-A","sensor":"fluxo","evento":"entrada"}}
+{"evento_id":"8416d34f-d0af-db60-2c2f-7bf356d720d9","tipo":"leitura_iot","origem":"historico","ocorrido_em":"2026-09-01T07:04:43-03:00","ingerido_em":"2026-09-01T10:04:44.281Z","dados":{"sala":"SALA-A","sensor":"fluxo","evento":"saida"}}
+{"evento_id":"69ed8e95-c2d9-7bad-5455-399deb406782","tipo":"leitura_iot","origem":"historico","ocorrido_em":"2026-09-01T07:15:54-03:00","ingerido_em":"2026-09-01T10:15:57.599Z","dados":{"sala":"SALA-A","sensor":"fluxo","evento":"entrada"}}
+
+### datalake/bronze/cancelamento/dt=2026-09-22/eventos-historico.jsonl
+{"evento_id":"f7b9d4cc-0549-a286-ee19-b8236ad208ec","tipo":"cancelamento","origem":"historico","ocorrido_em":"2026-09-22T23:53:15-03:00","ingerido_em":"2026-09-23T02:53:16.227Z","dados":{"reserva_id":"CC-D3AD36"}}
+
+### datalake/bronze/presenca/dt=2026-09-03/eventos-historico.jsonl
+{"evento_id":"3d8e1bee-f843-560e-6aea-491ff84f2ae9","tipo":"presenca","origem":"historico","ocorrido_em":"2026-09-03T09:19:44-03:00","ingerido_em":"2026-09-03T12:19:48.080Z","dados":{"reserva_id":"CC-AB55DC"}}
+{"evento_id":"bca31d90-fe27-fa96-42f4-ed12bf896e35","tipo":"presenca","origem":"historico","ocorrido_em":"2026-09-03T15:50:00-03:00","ingerido_em":"2026-09-03T18:50:01.261Z","dados":{"reserva_id":"CC-A14981"}}
+{"evento_id":"b43d613a-b5f9-9d58-3b7b-3d4e7592db2c","tipo":"presenca","origem":"historico","ocorrido_em":"2026-09-03T18:43:07-03:00","ingerido_em":"2026-09-03T21:43:09.743Z","dados":{"reserva_id":"CC-EB8299"}}
+

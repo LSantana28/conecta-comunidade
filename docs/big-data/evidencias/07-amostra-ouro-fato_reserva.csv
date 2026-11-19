@@ -1,0 +1,5 @@
+﻿reserva_id,data,hora,dia_semana,origem,perfil_hash,servico_id,turma_id,resultado,status_final,valida,via_recomendacao,busca_id,minutos_desde_busca
+CC-850846,2026-08-21,9,5,historico,f40e55f7c213ef3e,SRV-01,SRV-01-T1,confirmada,cancelada,0,0,,
+CC-61746B,2026-08-21,12,5,historico,5e3187467b3a08f2,SRV-02,SRV-02-T1,confirmada,faltou,1,0,,
+CC-15E306,2026-08-21,19,5,historico,63af96c7dc0d4b24,SRV-03,SRV-03-T1,confirmada,compareceu,1,1,b83da415-3bd0-f4c3-9389-38dc340dd08f,18
+CC-6A1CE1,2026-08-21,22,5,historico,648a816f13f8dc7d,SRV-05,SRV-05-T1,confirmada,compareceu,1,1,c282aafc-df18-c4a4-0b8a-804b06518388,10
