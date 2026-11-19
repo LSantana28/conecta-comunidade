@@ -1,0 +1,17 @@
+GLOBAL SOLUTION 2026/2 - CITIZENTECH - TURMA 4ESOA
+
+Projeto: Conecta Comunidade
+Nome do grupo: [PREENCHER]
+
+Integrantes (RM - Nome completo):
+RM[PREENCHER] - [PREENCHER]
+RM[PREENCHER] - [PREENCHER]
+RM[PREENCHER] - [PREENCHER]
+RM[PREENCHER] - [PREENCHER]
+RM[PREENCHER] - [PREENCHER]
+
+Link do vídeo pitch (acesso público): [PREENCHER]
+Repositório: https://github.com/LSantana28/conecta-comunidade
+
+PDF com os entregáveis de cada parte: Conecta-Comunidade-Entregaveis.pdf (raiz do projeto)
+Instruções de execução: README.md
