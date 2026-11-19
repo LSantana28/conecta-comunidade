@@ -8,13 +8,13 @@ Plataforma que conecta cidadãos a vagas em **cursos gratuitos, capacitações, 
 
 ## Como rodar
 
-Requisito: **Node.js 20+** (não há dependências para instalar).
+Requisito: **Node.js 22 ou mais novo** (não há dependências para instalar). Os comandos funcionam de qualquer pasta, em Windows, Linux ou macOS.
 
 ```bash
 npm start          # http://localhost:3000
 npm run iot        # em outro terminal: simulador dos sensores IoT
 npm run dados      # (re)gera o histórico de 90 dias e roda o ETL do data lake
-npm test           # 32 testes automatizados
+npm test           # 33 testes automatizados
 npm run ia:avaliar # avaliação antes × depois do agente IA
 npm run smoke      # smoke test contra a aplicação no ar
 ```
@@ -104,9 +104,9 @@ Documentação completa em [`docs/big-data/`](docs/big-data/README.md).
 | Item | Entrega | Onde |
 |------|---------|------|
 | **Organização** | Módulos separados (núcleo IA, servidor, IoT, frontend, testes, docs) e histórico Git com commits por etapa | estrutura abaixo, `git log` |
-| **DevOps** | Dockerfile multi-stage (testa no build, roda sem root, HEALTHCHECK), docker compose (app + IoT + ETL, volume do data lake), pipeline **GitHub Actions** (testes Node 20/22 → pipeline de dados com checagem de qualidade → build → container healthy → smoke test → publica no GHCR), Jenkinsfile alternativo, monitoramento `/health` e `/metrics` (Prometheus) e logs JSON | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `Jenkinsfile` |
-| **Segurança** | 10 práticas: pseudonimização LGPD no data lake, validação de entrada, anti-XSS + CSP, senha scrypt + token HMAC, chave de dispositivo IoT, rate limit, cabeçalhos, LGPD (minimização e máscara), segredos obrigatórios em produção, container sem root | `docs/seguranca.md` |
-| **Testes** | Plano com 32 casos automatizados + 10 E2E, todos aprovados, com evidências | `docs/plano-de-testes.md`, `docs/evidencias/` |
+| **DevOps** | Dockerfile multi-stage (testa no build, roda sem root, HEALTHCHECK), docker compose (app + IoT + ETL, volume do data lake), pipeline **GitHub Actions** (testes Node 22/24 → pipeline de dados com checagem de qualidade → build → container healthy → smoke test → publica no GHCR), Jenkinsfile alternativo, monitoramento `/health` e `/metrics` (Prometheus) e logs JSON | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `Jenkinsfile` |
+| **Segurança** | 11 práticas: uma vaga por pessoa em cada serviço (CPF validado, guardado só como chave HMAC), pseudonimização LGPD no data lake, validação de entrada, anti-XSS + CSP, senha scrypt + token HMAC, chave de dispositivo IoT, rate limit, cabeçalhos, LGPD (minimização e máscara), segredos obrigatórios em produção, container sem root | `docs/seguranca.md` |
+| **Testes** | Plano com 33 casos automatizados + 11 E2E, todos aprovados, com evidências | `docs/plano-de-testes.md`, `docs/evidencias/` |
 
 ## Estrutura
 
@@ -134,7 +134,7 @@ conecta-comunidade/
 |--------|------|--------|-----------|
 | GET | `/api/servicos` | público | Catálogo com saldo de vagas e ocupação da sala |
 | POST | `/api/recomendacoes` | público | Executa o agente IA para um perfil |
-| POST | `/api/reservas` | público | Reserva uma vaga (baixa imediata no saldo) |
+| POST | `/api/reservas` | público | Reserva uma vaga com nome e CPF (baixa imediata no saldo; uma reserva ativa por CPF em cada serviço) |
 | GET | `/api/reservas/:protocolo` | público | Consulta uma reserva |
 | POST | `/api/reservas/:protocolo/cancelar` | público | Cancela e devolve a vaga |
 | POST | `/api/auth/login` | público | Login do gestor → token |

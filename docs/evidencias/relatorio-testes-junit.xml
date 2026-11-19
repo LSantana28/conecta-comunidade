@@ -1,63 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <testsuites>
-	<testsuite name="API — fluxo do cidadão" time="0.052910" disabled="0" errors="0" tests="3" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT06 — Fluxo completo: recomendar → reservar (saldo -1) → consultar → cancelar (saldo +1)" time="0.031356" classname="test"/>
-		<testcase name="CT07 — Serviço esgotado retorna 409 e some das recomendações" time="0.014195" classname="test"/>
-		<testcase name="CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande" time="0.005820" classname="test"/>
+	<testsuite name="API — fluxo do cidadão" time="0.073654" disabled="0" errors="0" tests="4" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT06 — Fluxo completo: recomendar → reservar (saldo -1) → consultar → cancelar (saldo +1)" time="0.036539" classname="test"/>
+		<testcase name="CT07 — Serviço esgotado retorna 409 e some das recomendações" time="0.014358" classname="test"/>
+		<testcase name="CT26 — Uma reserva ativa por CPF em cada serviço; CPF inválido recusado; CPF nunca devolvido" time="0.016470" classname="test"/>
+		<testcase name="CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande" time="0.004693" classname="test"/>
 	</testsuite>
-	<testsuite name="API — segurança e gestão" time="0.114560" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT09 — Dashboard exige login: sem token 401, senha errada 401, login correto 200" time="0.077003" classname="test"/>
-		<testcase name="CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação, excesso e temperatura" time="0.018077" classname="test"/>
-		<testcase name="CT13b — Login bloqueado (429) após 10 tentativas por minuto" time="0.010493" classname="test"/>
-		<testcase name="CT14 — Cabeçalhos de segurança (CSP etc.) e bloqueio de path traversal" time="0.003858" classname="test"/>
-		<testcase name="CT15 — Monitoramento: /health responde ok e /metrics expõe métricas no formato Prometheus" time="0.004523" classname="test"/>
+	<testsuite name="API — segurança e gestão" time="0.115965" disabled="0" errors="0" tests="5" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT09 — Dashboard exige login: sem token 401, senha errada 401, login correto 200" time="0.082165" classname="test"/>
+		<testcase name="CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação, excesso e temperatura" time="0.017140" classname="test"/>
+		<testcase name="CT13b — Login bloqueado (429) após 10 tentativas por minuto" time="0.009561" classname="test"/>
+		<testcase name="CT14 — Cabeçalhos de segurança (CSP etc.) e bloqueio de path traversal" time="0.004215" classname="test"/>
+		<testcase name="CT15 — Monitoramento: /health responde ok e /metrics expõe métricas no formato Prometheus" time="0.002275" classname="test"/>
 	</testsuite>
-	<testsuite name="Funções analíticas (equivalentes DAX)" time="0.002071" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT16 — DIVIDE, PERCENTILE, média móvel, variação, DATEADD e RANKX" time="0.001418" classname="test"/>
+	<testsuite name="Funções analíticas (equivalentes DAX)" time="0.001911" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT16 — DIVIDE, PERCENTILE, média móvel, variação, DATEADD e RANKX" time="0.001303" classname="test"/>
 	</testsuite>
-	<testsuite name="Ingestão (camada bronze)" time="0.005981" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT17 — Grava eventos particionados por tipo/data e nunca grava dado pessoal" time="0.005820" classname="test"/>
+	<testsuite name="Ingestão (camada bronze)" time="0.005107" disabled="0" errors="0" tests="1" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT17 — Grava eventos particionados por tipo/data e nunca grava dado pessoal" time="0.004935" classname="test"/>
 	</testsuite>
-	<testsuite name="ETL bronze → prata → ouro" time="0.018589" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT18 — Qualidade: remove duplicados, normaliza datas e manda inválidos para a quarentena" time="0.000456" classname="test"/>
-		<testcase name="CT19 — Ouro: status final, atribuição à recomendação e ocupação reconstruída pelo tempo" time="0.000276" classname="test"/>
+	<testsuite name="ETL bronze → prata → ouro" time="0.015025" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT18 — Qualidade: remove duplicados, normaliza datas e manda inválidos para a quarentena" time="0.000279" classname="test"/>
+		<testcase name="CT19 — Ouro: status final, atribuição à recomendação e ocupação reconstruída pelo tempo" time="0.000168" classname="test"/>
 	</testsuite>
-	<testsuite name="Análises e API (camada ouro)" time="0.935997" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT20 — Indicadores respondem aos filtros e comparam com o período anterior" time="0.015000" classname="test"/>
-		<testcase name="CT21 — API de análises exige login e a aplicação alimenta o data lake" time="0.165021" classname="test"/>
+	<testsuite name="Análises e API (camada ouro)" time="1.092946" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT20 — Indicadores respondem aos filtros e comparam com o período anterior" time="0.015924" classname="test"/>
+		<testcase name="CT21 — API de análises exige login e a aplicação alimenta o data lake" time="0.169519" classname="test"/>
 	</testsuite>
-	<testsuite name="Agente de recomendação" time="0.017802" disabled="0" errors="0" tests="12" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT01 — Cenário emprego recomenda os 3 serviços de capacitação, ordenados e acima do score mínimo" time="0.003032" classname="test"/>
-		<testcase name="CT01v1 — A versão 1 continua disponível e com o mesmo resultado (histórico do data lake)" time="0.000571" classname="test"/>
-		<testcase name="CT01b — Cenário social/jurídico no turno da tarde prioriza o plantão jurídico" time="0.000363" classname="test"/>
-		<testcase name="CT02 — Regra 1: serviço sem vagas nunca é recomendado" time="0.000887" classname="test"/>
-		<testcase name="CT03 — Regra 2: turno incompatível retira exatamente 20 pontos" time="0.000330" classname="test"/>
-		<testcase name="CT04 — Regra 3: selo 'Últimas vagas' (&lt;=5) e reforço de visibilidade para turma ociosa" time="0.000338" classname="test"/>
-		<testcase name="CT05 — Perfil sem aderência: nenhuma recomendação e encaminha ao acolhimento" time="0.000296" classname="test"/>
-		<testcase name="CT05b — Acentos e maiúsculas não alteram o resultado" time="0.000607" classname="test"/>
-		<testcase name="CT22 — v2 entende o vocabulário do dia a dia (melhoria vinda do dashboard de Big Data)" time="0.001645" classname="test"/>
-		<testcase name="CT23 — Regra 5: sem opção no turno pedido, sugere a mais próxima em outro turno e avisa" time="0.000564" classname="test"/>
-		<testcase name="CT24 — Regra 6: nenhuma recomendação fica 20+ pontos abaixo da melhor" time="0.002286" classname="test"/>
-		<testcase name="CT25 — Ganho medido (validação, perfis não usados no ajuste): v2 > v1 > mural sem IA" time="0.005236" classname="test"/>
+	<testsuite name="Agente de recomendação" time="0.012125" disabled="0" errors="0" tests="12" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT01 — Cenário emprego recomenda os 3 serviços de capacitação, ordenados e acima do score mínimo" time="0.002144" classname="test"/>
+		<testcase name="CT01v1 — A versão 1 continua disponível e com o mesmo resultado (histórico do data lake)" time="0.000327" classname="test"/>
+		<testcase name="CT01b — Cenário social/jurídico no turno da tarde prioriza o plantão jurídico" time="0.000209" classname="test"/>
+		<testcase name="CT02 — Regra 1: serviço sem vagas nunca é recomendado" time="0.000601" classname="test"/>
+		<testcase name="CT03 — Regra 2: turno incompatível retira exatamente 20 pontos" time="0.000256" classname="test"/>
+		<testcase name="CT04 — Regra 3: selo 'Últimas vagas' (&lt;=5) e reforço de visibilidade para turma ociosa" time="0.000142" classname="test"/>
+		<testcase name="CT05 — Perfil sem aderência: nenhuma recomendação e encaminha ao acolhimento" time="0.000270" classname="test"/>
+		<testcase name="CT05b — Acentos e maiúsculas não alteram o resultado" time="0.000418" classname="test"/>
+		<testcase name="CT22 — v2 entende o vocabulário do dia a dia (melhoria vinda do dashboard de Big Data)" time="0.001551" classname="test"/>
+		<testcase name="CT23 — Regra 5: sem opção no turno pedido, sugere a mais próxima em outro turno e avisa" time="0.000531" classname="test"/>
+		<testcase name="CT24 — Regra 6: nenhuma recomendação fica 20+ pontos abaixo da melhor" time="0.001459" classname="test"/>
+		<testcase name="CT25 — Ganho medido (validação, perfis não usados no ajuste): v2 > v1 > mural sem IA" time="0.003115" classname="test"/>
 	</testsuite>
-	<testsuite name="Segurança — validação de entrada" time="0.001721" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT08 — Rejeita nome com script (XSS), opção fora da lista e texto longo" time="0.000937" classname="test"/>
-		<testcase name="CT08b — Escape de HTML e LGPD (minimização e máscara)" time="0.000191" classname="test"/>
+	<testsuite name="Segurança — validação de entrada" time="0.002244" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT08 — Rejeita nome com script (XSS), opção fora da lista e texto longo" time="0.001347" classname="test"/>
+		<testcase name="CT08b — Escape de HTML e LGPD (minimização e máscara)" time="0.000219" classname="test"/>
 	</testsuite>
-	<testsuite name="Segurança — autenticação" time="0.099040" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT10 — Senha com hash scrypt e token HMAC com expiração" time="0.098171" classname="test"/>
-		<testcase name="CT13 — Rate limiter bloqueia após o limite e libera na próxima janela" time="0.000660" classname="test"/>
+	<testsuite name="Segurança — autenticação" time="0.104895" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT10 — Senha com hash scrypt e token HMAC com expiração" time="0.103938" classname="test"/>
+		<testcase name="CT13 — Rate limiter bloqueia após o limite e libera na próxima janela" time="0.000771" classname="test"/>
 	</testsuite>
-	<testsuite name="IoT — sensores simulados" time="0.004481" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
-		<testcase name="CT12 — Leituras do simulador são aceitas pelo validador e ocupação fica entre 0 e a capacidade" time="0.004014" classname="test"/>
-		<testcase name="CT12b — Validador IoT rejeita sala, sensor e temperatura inválidos; chave comparada com segurança" time="0.000288" classname="test"/>
+	<testsuite name="IoT — sensores simulados" time="0.004120" disabled="0" errors="0" tests="2" failures="0" skipped="0" hostname="vm">
+		<testcase name="CT12 — Leituras do simulador são aceitas pelo validador e ocupação fica entre 0 e a capacidade" time="0.003662" classname="test"/>
+		<testcase name="CT12b — Validador IoT rejeita sala, sensor e temperatura inválidos; chave comparada com segurança" time="0.000270" classname="test"/>
 	</testsuite>
-	<!-- tests 32 -->
+	<!-- tests 33 -->
 	<!-- suites 10 -->
-	<!-- pass 32 -->
+	<!-- pass 33 -->
 	<!-- fail 0 -->
 	<!-- cancelled 0 -->
 	<!-- skipped 0 -->
 	<!-- todo 0 -->
-	<!-- duration_ms 1539.341599 -->
+	<!-- duration_ms 1726.441242 -->
 </testsuites>

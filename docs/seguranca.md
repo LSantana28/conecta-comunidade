@@ -11,6 +11,7 @@
 | 7 | **Proteção de dados (LGPD)**: só o primeiro nome é armazenado na reserva; nome mascarado em respostas de log e na visão do gestor; logs sem dados pessoais | `validarReserva`, `mascararNome` | CT06, CT08b, CT09 |
 | 8 | **Segredos fora do código**: `.env` no `.gitignore`; em `NODE_ENV=production` a aplicação **não sobe** sem `ADMIN_PASSWORD_HASH`, `TOKEN_SECRET`, `IOT_DEVICE_KEY` e `PSEUDONIMO_SECRET` | `carregarConfig` | `evidencias/config-producao-sem-segredos.txt` |
 | 9 | **Container sem root** e imagem mínima (alpine, sem ferramentas de teste) | `Dockerfile` | build no CI |
+| 11 | **Uma vaga por pessoa em cada serviço**: o agendamento exige CPF, validado pelos dígitos verificadores. O CPF não é armazenado nem devolvido: vira uma chave HMAC-SHA256 usada só para bloquear uma segunda reserva ativa da mesma pessoa no mesmo serviço. Impede que alguém esgote as vagas sozinho, e a tentativa duplicada não consome vaga | `cpfValido`, `chaveDocumento` em `seguranca.js`; `store.reservaAtivaDe()` | CT08, CT26, E2E-11 |
 | 10 | **Pseudonimização no data lake (LGPD)**: o nome vira um código HMAC-SHA256 antes de ser gravado, e a descrição livre não é armazenada. Assim é possível contar pessoas e medir conversão sem saber quem são. Análises só para gestores autenticados, com validação dos filtros | `src/dados/ingestao.js`, rota `/api/admin/analises` | CT17, CT20, CT21 |
 
 > As credenciais `admin / conecta2026` e `dev-iot-key` existem **apenas** no modo de desenvolvimento, para a demonstração.
