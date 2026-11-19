@@ -64,6 +64,20 @@ with sync_playwright() as p:
     pg.wait_for_selector(".kpi")
     pg.wait_for_timeout(800)
     shot("08-dashboard.png")
+
+    # 8. Análises (Big Data) — visão geral e com filtros
+    pg.goto(BASE + "/#/analises")
+    pg.wait_for_selector(".insight")
+    pg.wait_for_timeout(600)
+    shot("09-analises-big-data.png")
+    pg.select_option("#fPeriodo", "90")
+    pg.wait_for_timeout(300)
+    pg.select_option("#fTurno", "noite")
+    pg.wait_for_selector("text=turno noite")
+    pg.wait_for_timeout(500)
+    pg.hover("#gServicos svg rect >> nth=-1")
+    pg.wait_for_timeout(200)
+    shot("10-analises-filtro-noite.png")
     nav.close()
 
 print("Erros no console do navegador:", erros_console or "nenhum")
