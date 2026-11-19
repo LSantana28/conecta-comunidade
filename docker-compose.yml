@@ -1,0 +1,23 @@
+# Sobe a plataforma + o simulador de sensores IoT.
+# Uso:  cp .env.example .env   (e ajuste os segredos)
+#       docker compose up --build
+services:
+  app:
+    build: .
+    image: conecta-comunidade:latest
+    ports:
+      - "3000:3000"
+    env_file: .env
+    restart: unless-stopped
+
+  iot-simulador:
+    image: conecta-comunidade:latest
+    command: ["node", "src/iot/simulador.js"]
+    environment:
+      API_URL: http://app:3000
+      INTERVALO_MS: "1500"
+    env_file: .env
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
