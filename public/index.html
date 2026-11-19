@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conecta Comunidade — CitizenTech</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/css/styles.css" />
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <header class="topo">
+    <div>
+      <h1>Conecta Comunidade</h1>
+      <p>Tecnologia aproximando pessoas de oportunidades</p>
+    </div>
+    <span class="badge-ods">ODS 10 &amp; ODS 11 · Global Solution 2026/2</span>
+  </header>
+
+  <nav class="abas" aria-label="Telas">
+    <a href="#/recomendacoes" data-rota="recomendacoes">Recomendações IA</a>
+    <a href="#/catalogo" data-rota="catalogo">Catálogo de vagas</a>
+    <a href="#/agendamentos" data-rota="agendamentos">Meus agendamentos</a>
+    <a href="#/dashboard" data-rota="dashboard">Dashboard (gestão)</a>
+  </nav>
+
+  <main id="tela" tabindex="-1"></main>
+
+  <dialog id="dialogo">
+    <form method="dialog" id="formDialogo">
+      <h3 id="dialogoTitulo">Confirmar agendamento</h3>
+      <p id="dialogoTexto"></p>
+      <label for="dialogoNome">Seu nome</label>
+      <input id="dialogoNome" maxlength="60" required autocomplete="given-name" />
+      <p class="erro" id="dialogoErro" hidden></p>
+      <div class="acoes-dialogo">
+        <button value="cancelar" type="button" class="btn-sec" id="dialogoCancelar">Cancelar</button>
+        <button value="ok" class="btn-book" id="dialogoOk">Confirmar vaga</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <footer class="rodape">Conecta Comunidade · CitizenTech · Dados de demonstração</footer>
+</body>
+</html>
