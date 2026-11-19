@@ -13,7 +13,8 @@
     "smoke": "node scripts/smoke.js",
     "dados:gerar": "node src/dados/gerar-historico.js",
     "etl": "node src/dados/etl.js",
-    "dados": "node src/dados/gerar-historico.js && node src/dados/etl.js"
+    "dados": "node src/dados/gerar-historico.js && node src/dados/etl.js",
+    "ia:avaliar": "node scripts/avaliar-ia.js"
   },
   "engines": {
     "node": ">=20"
