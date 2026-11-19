@@ -47,7 +47,7 @@ async function atualizar(el) {
   el.querySelector("#porServico").innerHTML = d.porServico.map(s => `
     <div class="linha-barra">
       <div class="rot"><span>${esc(s.titulo)}</span><span>${s.ocupadas}/${s.vagasTotais}</span></div>
-      <div class="barra ${s.utilizacao < 50 ? "alerta" : ""}"><span data-largura="${s.utilizacao}"></span></div>
+      <div class="barra ${s.utilizacao < 50 ? "alerta" : ""}"><span data-chave="srv-${esc(s.id)}" data-largura="${s.utilizacao}"></span></div>
       <div class="val">${s.utilizacao}%</div>
     </div>`).join("") +
     `<p class="sub mt">Barras em laranja: serviços com menos de 50% de utilização — candidatos a divulgação extra.</p>`;
@@ -57,7 +57,7 @@ async function atualizar(el) {
     return `
       <div class="sala">
         <div class="sala-top"><strong>${esc(s.sala)}</strong><span class="codigo">${s.atualizadoEm ? "leitura " + esc(new Date(s.atualizadoEm).toLocaleTimeString("pt-BR")) : "sem leituras"}</span></div>
-        <div class="barra ${pct >= 100 ? "critica" : pct >= 80 ? "alerta" : ""}"><span data-largura="${pct}"></span></div>
+        <div class="barra ${pct >= 100 ? "critica" : pct >= 80 ? "alerta" : ""}"><span data-chave="sala-${esc(s.sala)}" data-largura="${pct}"></span></div>
         <div class="sensores">
           <span>Sensor de fluxo: <strong>${s.ocupacao}/${s.capacidade}</strong> pessoas (${pct}%)</span>
           <span>Temperatura: <strong>${s.temperatura === null ? "—" : esc(s.temperatura) + " °C"}</strong></span>
@@ -70,7 +70,7 @@ async function atualizar(el) {
   const maxDem = Math.max(1, ...demanda.map(([, v]) => v));
   el.querySelector("#demanda").innerHTML = demanda.length ? demanda.map(([k, v]) => `
     <div class="linha-barra"><div class="rot"><span>${esc(k)}</span></div>
-      <div class="barra"><span data-largura="${(v / maxDem) * 100}"></span></div><div class="val">${v}</div></div>`).join("")
+      <div class="barra"><span data-chave="dem-${esc(k)}" data-largura="${(v / maxDem) * 100}"></span></div><div class="val">${v}</div></div>`).join("")
     : `<p class="vazio">Nenhuma busca registrada ainda.</p>`;
 
   const rec = d.porServico.filter(s => s.vezesRecomendado > 0).sort((a, b) => b.vezesRecomendado - a.vezesRecomendado);

@@ -26,10 +26,25 @@ export const armazenamento = {
   }
 };
 
-// CSP bloqueia style="" no HTML; larguras de barras são aplicadas via CSSOM
+// CSP bloqueia style="" no HTML; larguras de barras são aplicadas via CSSOM.
+// Barras com data-chave lembram a última largura: ao redesenhar a tela, a barra nova
+// começa onde a antiga estava e só anima se o valor mudou (não volta a 0%).
+const largurasAnteriores = new Map();
 export function aplicarBarras(raiz) {
   raiz.querySelectorAll("[data-largura]").forEach(el => {
-    requestAnimationFrame(() => { el.style.width = Math.min(100, Number(el.dataset.largura)) + "%"; });
+    const nova = Math.min(100, Number(el.dataset.largura)) + "%";
+    const chave = el.dataset.chave;
+    const anterior = chave && largurasAnteriores.get(chave);
+    if (chave) largurasAnteriores.set(chave, nova);
+    if (anterior) {
+      el.style.transition = "none";
+      el.style.width = anterior;
+      void el.offsetWidth;            // aplica a largura anterior sem animação
+      el.style.transition = "";
+      if (anterior !== nova) requestAnimationFrame(() => { el.style.width = nova; });
+    } else {
+      requestAnimationFrame(() => { el.style.width = nova; });
+    }
   });
 }
 

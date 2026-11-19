@@ -1,6 +1,6 @@
 // TELA 2 — Catálogo de vagas (todas as oportunidades, com filtros e ocupação física via IoT)
 import { api, agendar } from "../api.js";
-import { esc, NOMES_TURNO, toast, aplicarBarras, confirmarAgendamento } from "../util.js";
+import { esc, NOMES_TURNO, toast, confirmarAgendamento } from "../util.js";
 
 let servicos = [];
 let timer = null;
@@ -52,47 +52,90 @@ async function carregar(el) {
   desenhar(el);
 }
 
-function desenhar(el) {
-  const busca = el.querySelector("#fBusca").value.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+function filtrar(el) {
+  const norm = t => t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const busca = norm(el.querySelector("#fBusca").value);
   const cat = el.querySelector("#fCategoria").value;
   const turno = el.querySelector("#fTurno").value;
   const soComVagas = el.querySelector("#fVagas").value === "com";
-
-  const visiveis = servicos.filter(s =>
-    (!busca || (s.titulo + " " + s.instituicao + " " + s.categoria).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").includes(busca)) &&
+  return servicos.filter(s =>
+    (!busca || norm(s.titulo + " " + s.instituicao + " " + s.categoria).includes(busca)) &&
     (!cat || s.categoria === cat) && (!turno || s.turno === turno) && (!soComVagas || s.vagas > 0));
+}
 
+// Recria a grade só quando muda o CONJUNTO de cards (filtros ou serviço esgotado).
+// Nas atualizações periódicas, os cards existentes são mantidos e só os valores que mudaram são alterados:
+// assim a barra só se move quando o sensor registra entrada/saída.
+function desenhar(el) {
   const grade = el.querySelector("#gradeCatalogo");
-  if (!visiveis.length) { grade.innerHTML = `<p class="vazio">Nenhuma oportunidade encontrada com esses filtros.</p>`; return; }
+  const visiveis = filtrar(el);
+  if (!visiveis.length) {
+    grade.innerHTML = `<p class="vazio">Nenhuma oportunidade encontrada com esses filtros.</p>`;
+    grade.dataset.ids = "";
+    return;
+  }
+  const ids = visiveis.map(s => s.id).join(",");
+  if (grade.dataset.ids !== ids) {
+    grade.innerHTML = visiveis.map(estruturaCard).join("");
+    grade.dataset.ids = ids;
+  }
+  for (const s of visiveis) atualizarCard(grade.querySelector(`[data-card="${s.id}"]`), s);
+}
 
-  grade.innerHTML = visiveis.map(s => {
-    const sala = s.ocupacaoSala;
-    const pct = Math.round((sala.ocupacao / sala.capacidade) * 100);
-    const classeBarra = pct >= 100 ? "critica" : pct >= 80 ? "alerta" : "";
-    const selo = s.vagas === 0 ? `<span class="pill cancel">Esgotado</span>`
-      : s.vagas <= 5 ? `<span class="pill urgent">Últimas ${s.vagas} vagas</span>`
-      : `<span class="pill ok">${s.vagas} vagas</span>`;
-    return `
-      <div class="card">
-        <div class="card-top"><h3>${esc(s.titulo)}</h3></div>
-        <div class="meta">
-          <span class="pill">${esc(s.instituicao)}</span>
-          <span class="pill">${esc(NOMES_TURNO[s.turno])}</span>
-          ${selo}
-        </div>
-        <p class="why">${esc(s.descricao)}</p>
-        <div class="linha-barra">
-          <div class="rot"><span>Ocupação agora · ${esc(s.sala)}</span><span>${sala.ocupacao}/${sala.capacidade} pessoas</span></div>
-          <div class="barra ${classeBarra}"><span data-largura="${pct}"></span></div>
-          <div class="val">${pct}%</div>
-        </div>
-        ${sala.ocupacao > sala.capacidade ? `<div class="alerta-txt">⚠ Sala acima da capacidade — gestor notificado</div>`
-          : sala.ocupacao === sala.capacidade ? `<div class="alerta-txt">Sala lotada no momento</div>` : ""}
-        <div class="card-actions">
-          <span class="codigo">${esc(s.id)} · início em ${s.inicioEmDias} dias</span>
-          <button class="btn-book" data-reservar="${esc(s.id)}" ${s.vagas === 0 ? "disabled" : ""}>${s.vagas === 0 ? "Sem vagas" : "Agendar vaga"}</button>
-        </div>
-      </div>`;
-  }).join("");
-  aplicarBarras(grade);
+function estruturaCard(s) {
+  return `
+    <div class="card" data-card="${esc(s.id)}">
+      <div class="card-top"><h3>${esc(s.titulo)}</h3></div>
+      <div class="meta">
+        <span class="pill">${esc(s.instituicao)}</span>
+        <span class="pill">${esc(NOMES_TURNO[s.turno])}</span>
+        <span class="pill" data-campo="selo"></span>
+      </div>
+      <p class="why">${esc(s.descricao)}</p>
+      <div class="linha-barra">
+        <div class="rot"><span>Ocupação agora · ${esc(s.sala)}</span><span data-campo="pessoas"></span></div>
+        <div class="barra" data-campo="trilho"><span data-campo="barra"></span></div>
+        <div class="val" data-campo="pct"></div>
+      </div>
+      <div class="alerta-txt" data-campo="alerta" hidden></div>
+      <div class="card-actions">
+        <span class="codigo">${esc(s.id)} · início em ${s.inicioEmDias} dias</span>
+        <button class="btn-book" data-reservar="${esc(s.id)}"></button>
+      </div>
+    </div>`;
+}
+
+// Só toca no DOM quando o valor realmente mudou
+function definir(elemento, prop, valor) {
+  if (elemento[prop] !== valor) elemento[prop] = valor;
+}
+
+function atualizarCard(card, s) {
+  const q = campo => card.querySelector(`[data-campo="${campo}"]`);
+  const sala = s.ocupacaoSala;
+  const pct = Math.round((sala.ocupacao / sala.capacidade) * 100);
+
+  const [classeSelo, textoSelo] = s.vagas === 0 ? ["cancel", "Esgotado"]
+    : s.vagas <= 5 ? ["urgent", `Últimas ${s.vagas} vagas`] : ["ok", `${s.vagas} vagas`];
+  definir(q("selo"), "className", `pill ${classeSelo}`);
+  definir(q("selo"), "textContent", textoSelo);
+
+  definir(q("pessoas"), "textContent", `${sala.ocupacao}/${sala.capacidade} pessoas`);
+  definir(q("pct"), "textContent", `${pct}%`);
+  definir(q("trilho"), "className", `barra ${pct >= 100 ? "critica" : pct >= 80 ? "alerta" : ""}`.trim());
+  const largura = Math.min(100, pct) + "%";
+  const barra = q("barra");
+  if (barra.style.width !== largura) {
+    if (!barra.style.width) requestAnimationFrame(() => { barra.style.width = largura; }); // 1ª exibição: anima a partir de 0
+    else barra.style.width = largura;                                                      // depois: só anima a diferença
+  }
+
+  const alerta = sala.ocupacao > sala.capacidade ? "⚠ Sala acima da capacidade — gestor notificado"
+    : sala.ocupacao === sala.capacidade ? "Sala lotada no momento" : "";
+  definir(q("alerta"), "textContent", alerta);
+  definir(q("alerta"), "hidden", !alerta);
+
+  const btn = card.querySelector("[data-reservar]");
+  definir(btn, "disabled", s.vagas === 0);
+  definir(btn, "textContent", s.vagas === 0 ? "Sem vagas" : "Agendar vaga");
 }
