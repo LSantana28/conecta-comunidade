@@ -3,3 +3,8 @@ node_modules/
 test-results.xml
 *.log
 .DS_Store
+
+# Data lake: bronze/prata/quarentena são regenerados com "npm run dados"; a camada ouro é versionada
+datalake/bronze/
+datalake/prata/
+datalake/quarentena/

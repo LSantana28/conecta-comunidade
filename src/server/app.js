@@ -6,6 +6,8 @@ import crypto from "node:crypto";
 import { avaliar } from "../core/recomendacao.js";
 import { NOMES_TURNO } from "../core/catalogo.js";
 import { criarStore } from "./store.js";
+import { criarIngestor } from "../dados/ingestao.js";
+import { criarAnalises } from "../dados/analises.js";
 import {
   validarPerfil, validarReserva, validarLeituraIoT, ErroValidacao,
   conferirSenha, gerarHashSenha, assinarToken, verificarToken,
@@ -18,8 +20,8 @@ const TIPOS = { ".html": "text/html; charset=utf-8", ".js": "text/javascript; ch
 
 export function carregarConfig(env = process.env) {
   const producao = env.NODE_ENV === "production";
-  if (producao && (!env.ADMIN_PASSWORD_HASH || !env.TOKEN_SECRET || !env.IOT_DEVICE_KEY)) {
-    throw new Error("Em produção defina ADMIN_PASSWORD_HASH, TOKEN_SECRET e IOT_DEVICE_KEY.");
+  if (producao && (!env.ADMIN_PASSWORD_HASH || !env.TOKEN_SECRET || !env.IOT_DEVICE_KEY || !env.PSEUDONIMO_SECRET)) {
+    throw new Error("Em produção defina ADMIN_PASSWORD_HASH, TOKEN_SECRET, IOT_DEVICE_KEY e PSEUDONIMO_SECRET.");
   }
   return {
     adminUser: env.ADMIN_USER || "admin",
@@ -27,12 +29,18 @@ export function carregarConfig(env = process.env) {
     adminPasswordHash: env.ADMIN_PASSWORD_HASH || gerarHashSenha("conecta2026"),
     tokenSecret: env.TOKEN_SECRET || crypto.randomBytes(32).toString("hex"),
     iotDeviceKey: env.IOT_DEVICE_KEY || "dev-iot-key",
-    log: env.LOG !== "off"
+    log: env.LOG !== "off",
+    // Data lake: pasta raiz (bronze/prata/ouro). DATALAKE_DIR=off desliga a ingestão.
+    datalakeDir: env.DATALAKE_DIR === "off" ? null : path.resolve(env.DATALAKE_DIR || "datalake"),
+    // Segredo do pseudônimo LGPD — fixo por ambiente para que o mesmo cidadão gere o mesmo pseudônimo
+    pseudonimoSecret: env.PSEUDONIMO_SECRET || "dev-pseudonimo"
   };
 }
 
 export function criarApp(config = carregarConfig()) {
   const store = criarStore();
+  const lake = criarIngestor({ dir: config.datalakeDir, segredo: config.pseudonimoSecret ?? "dev-pseudonimo" });
+  const analises = criarAnalises(config.datalakeDir);
   const limiteGeral = criarRateLimiter({ janelaMs: 60_000, max: 300 });
   const limiteLogin = criarRateLimiter({ janelaMs: 60_000, max: 10 });
   const limiteIoT = criarRateLimiter({ janelaMs: 60_000, max: 6000 }); // gateways enviam muitas leituras
@@ -108,12 +116,24 @@ export function criarApp(config = carregarConfig()) {
       const entrada = validarPerfil(await lerCorpo(req));
       const saida = avaliar(entrada, store.listarServicos(), NOMES_TURNO);
       store.registrarBusca(entrada.interesse_principal, saida.recomendacoes);
+      lake.registrar("busca", {
+        perfil_hash: lake.pseudonimo(entrada.cidadao),
+        situacao: entrada.situacao_atual, interesse: entrada.interesse_principal, turno: entrada.turno_disponivel,
+        recomendados: saida.recomendacoes.map((r, i) => ({ servico_id: r.id_servico, score: r.score_compatibilidade, posicao: i + 1 }))
+      });
       return [200, { entrada: { ...entrada, cidadao: mascararNome(entrada.cidadao) }, saida }];
     },
 
     "POST /api/reservas": async req => {
-      const dados = validarReserva(await lerCorpo(req));
+      const corpo = await lerCorpo(req);
+      const dados = validarReserva(corpo);
       const r = store.reservar(dados);
+      if (r.status === 409 || !r.erro) {
+        lake.registrar("reserva", {
+          perfil_hash: lake.pseudonimo(corpo.nome), servico_id: dados.id_servico,
+          resultado: r.erro ? "sem_vaga" : "confirmada", reserva_id: r.reserva?.protocolo ?? null
+        });
+      }
       return r.erro ? [r.status, { erro: r.erro }] : [201, r];
     },
 
@@ -134,17 +154,27 @@ export function criarApp(config = carregarConfig()) {
 
     "POST /api/iot/leituras": async req => {
       if (!chaveDispositivoValida(req.headers["x-device-key"], config.iotDeviceKey)) return [401, { erro: "Dispositivo não autorizado." }];
-      const r = store.registrarLeitura(validarLeituraIoT(await lerCorpo(req)));
+      const leitura = validarLeituraIoT(await lerCorpo(req));
+      const r = store.registrarLeitura(leitura);
+      if (!r.erro) lake.registrar("leitura_iot", leitura);
       return r.erro ? [r.status, { erro: r.erro }] : [201, r];
     },
 
-    "GET /api/iot/salas": () => [200, { salas: store.estadoSalas() }]
+    "GET /api/iot/salas": () => [200, { salas: store.estadoSalas() }],
+
+    // Big Data — indicadores calculados sobre a camada OURO do data lake
+    "GET /api/admin/analises": req => {
+      exigirAdmin(req);
+      const r = analises.consultar(Object.fromEntries(req.url_.searchParams));
+      return r.erro ? [r.status, { erro: r.erro }] : [200, r];
+    }
   };
 
   async function handler(req, res) {
     const inicio = Date.now();
     const ip = req.socket.remoteAddress ?? "desconhecido";
-    const { pathname } = new URL(req.url, "http://localhost");
+    req.url_ = new URL(req.url, "http://localhost");
+    const { pathname } = req.url_;
     store.metricas.requisicoes += 1;
 
     res.on("finish", () => {
@@ -170,6 +200,7 @@ export function criarApp(config = carregarConfig()) {
         }
         if (req.method === "POST" && mReserva[2]) {
           const r = store.cancelar(mReserva[1]);
+          if (!r.erro) lake.registrar("cancelamento", { reserva_id: mReserva[1] });
           return r.erro ? enviar(res, r.status, { erro: r.erro }) : enviar(res, 200, r);
         }
       }
@@ -185,5 +216,5 @@ export function criarApp(config = carregarConfig()) {
     }
   }
 
-  return { handler, store, config };
+  return { handler, store, config, lake, analises };
 }

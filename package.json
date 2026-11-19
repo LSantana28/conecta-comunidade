@@ -10,7 +10,10 @@
     "iot": "node src/iot/simulador.js",
     "test": "node --test --test-reporter=spec \"tests/*.test.js\"",
     "test:ci": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml \"tests/*.test.js\"",
-    "smoke": "node scripts/smoke.js"
+    "smoke": "node scripts/smoke.js",
+    "dados:gerar": "node src/dados/gerar-historico.js",
+    "etl": "node src/dados/etl.js",
+    "dados": "node src/dados/gerar-historico.js && node src/dados/etl.js"
   },
   "engines": {
     "node": ">=20"
