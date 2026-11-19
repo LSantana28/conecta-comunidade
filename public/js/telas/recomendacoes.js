@@ -141,14 +141,16 @@ export function render(el) {
 function desenhar(el) {
   const { saida, entrada } = ultimoResultado;
   el.querySelector("#resumo").innerHTML =
-    `<strong>Análise do agente:</strong> ${esc(saida.resumo_perfil)}<br><small>${esc(saida.proximo_passo_sugerido)}</small>`;
+    `<strong>Análise do agente (${esc(saida.agente)}):</strong> ${esc(saida.resumo_perfil)}<br><small>${esc(saida.proximo_passo_sugerido)}</small>`;
 
   const lista = el.querySelector("#lista");
   if (!saida.recomendacoes.length) {
     lista.innerHTML = `<div class="card"><p>Nenhuma vaga atingiu o score mínimo. Recomendamos procurar o canal de acolhimento social geral da comunidade.</p></div>`;
   } else {
-    lista.innerHTML = saida.recomendacoes.map(rec => {
-      const classe = rec.prioridade === "Últimas vagas" ? "urgent" : (rec.reforco_visibilidade ? "boost" : "");
+    lista.innerHTML = saida.recomendacoes.map((rec, i) => {
+      const classe = ["Últimas vagas", "Outro turno"].includes(rec.prioridade) ? "urgent" : (rec.reforco_visibilidade ? "boost" : "");
+      const d = saida._detalhe_regras[i];
+      const turnoTxt = d.pontos_turno_20 ? "turno compatível 20/20" : "outro turno 0/20";
       return `
         <div class="card">
           <div class="card-top">
@@ -161,6 +163,9 @@ function desenhar(el) {
             <span class="pill ${classe}">${rec.vagas_disponiveis} vagas · ${esc(rec.prioridade)}</span>
           </div>
           <p class="why"><strong>Por que recomendamos:</strong> ${esc(rec.justificativa)}</p>
+          <p class="calculo" title="Regra 2: 70% objetivo + 20% turno + 10% impacto social">
+            <strong>Como a IA calculou:</strong> objetivo ${d.pontos_objetivo_70}/70 (${d.palavras_chave_acertadas} palavras-chave) · ${turnoTxt} · impacto social ${d.pontos_impacto_social_10}/10${d.reforco_visibilidade ? " · +5 no ranking (turma começando)" : ""}
+          </p>
           <div class="card-actions">
             <span class="codigo">Código: ${esc(rec.id_servico)} · ${esc(rec.categoria)}</span>
             <button class="btn-book" data-reservar="${esc(rec.id_servico)}">Agendar vaga</button>
