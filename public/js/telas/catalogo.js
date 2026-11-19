@@ -86,6 +86,8 @@ function desenhar(el) {
           <div class="barra ${classeBarra}"><span data-largura="${pct}"></span></div>
           <div class="val">${pct}%</div>
         </div>
+        ${sala.ocupacao > sala.capacidade ? `<div class="alerta-txt">⚠ Sala acima da capacidade — gestor notificado</div>`
+          : sala.ocupacao === sala.capacidade ? `<div class="alerta-txt">Sala lotada no momento</div>` : ""}
         <div class="card-actions">
           <span class="codigo">${esc(s.id)} · início em ${s.inicioEmDias} dias</span>
           <button class="btn-book" data-reservar="${esc(s.id)}" ${s.vagas === 0 ? "disabled" : ""}>${s.vagas === 0 ? "Sem vagas" : "Agendar vaga"}</button>

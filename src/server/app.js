@@ -35,6 +35,7 @@ export function criarApp(config = carregarConfig()) {
   const store = criarStore();
   const limiteGeral = criarRateLimiter({ janelaMs: 60_000, max: 300 });
   const limiteLogin = criarRateLimiter({ janelaMs: 60_000, max: 10 });
+  const limiteIoT = criarRateLimiter({ janelaMs: 60_000, max: 6000 }); // gateways enviam muitas leituras
 
   function enviar(res, status, dados, extras = {}) {
     const corpo = typeof dados === "string" ? dados : JSON.stringify(dados);
@@ -152,7 +153,8 @@ export function criarApp(config = carregarConfig()) {
     });
 
     try {
-      if (!limiteGeral(ip)) return enviar(res, 429, { erro: "Limite de requisições excedido." });
+      const permitido = pathname === "/api/iot/leituras" ? limiteIoT(ip) : limiteGeral(ip);
+      if (!permitido) return enviar(res, 429, { erro: "Limite de requisições excedido." });
 
       const chave = `${req.method} ${pathname}`;
       if (rotas[chave]) {

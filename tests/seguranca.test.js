@@ -54,13 +54,14 @@ describe("Segurança — autenticação", () => {
 });
 
 describe("IoT — sensores simulados", () => {
-  test("CT12 — Leituras do simulador são aceitas pelo validador e ocupação nunca fica negativa", () => {
+  test("CT12 — Leituras do simulador são aceitas pelo validador e ocupação fica entre 0 e a capacidade", () => {
     const estado = estadoInicial();
     for (let i = 0; i < 2000; i++) {
       const leitura = proximaLeitura(estado);
       assert.doesNotThrow(() => validarLeituraIoT(leitura));
     }
     assert.ok(Object.values(estado).every(s => s.ocupacao >= 0));
+    assert.ok(Object.values(estado).every(s => s.ocupacao <= s.capacidade), "simulador nunca passa da capacidade");
     const sensores = new Set();
     const e2 = estadoInicial();
     for (let i = 0; i < 200; i++) sensores.add(proximaLeitura(e2).sensor);

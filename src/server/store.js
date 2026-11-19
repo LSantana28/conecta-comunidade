@@ -118,7 +118,10 @@ export function criarStore() {
 
 export function alertasDaSala(sala) {
   const alertas = [];
-  if (sala.ocupacao >= sala.capacidade) alertas.push("Lotação máxima atingida");
+  // O sensor registra a contagem real (não é "travada" na capacidade): se passar do
+  // limite, isso é uma situação de risco que precisa aparecer para o gestor.
+  if (sala.ocupacao > sala.capacidade) alertas.push(`Lotação excedida: ${sala.ocupacao - sala.capacidade} pessoa(s) acima do limite`);
+  else if (sala.ocupacao === sala.capacidade) alertas.push("Lotação máxima atingida");
   else if (sala.ocupacao >= sala.capacidade * 0.8) alertas.push("Ocupação acima de 80%");
   if (sala.temperatura !== null && sala.temperatura > LIMITE_TEMPERATURA) alertas.push(`Temperatura acima de ${LIMITE_TEMPERATURA} °C`);
   return alertas;

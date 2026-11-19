@@ -21,9 +21,12 @@ export function proximaLeitura(estado, rand = Math.random) {
   const s = salas[Math.floor(rand() * salas.length)];
 
   if (rand() < 0.75) {
-    // Sensor de fluxo: chance de entrada diminui conforme a sala enche
+    // Sensor de fluxo: chance de entrada diminui conforme a sala enche.
+    // Sala lotada = recepção não libera entrada (só saídas acontecem).
     const lotacao = s.ocupacao / s.capacidade;
-    const probEntrada = s.ocupacao === 0 ? 1 : Math.max(0.15, 0.8 - lotacao * 0.6);
+    const probEntrada = s.ocupacao === 0 ? 1
+      : s.ocupacao >= s.capacidade ? 0
+      : Math.max(0.15, 0.8 - lotacao * 0.6);
     const evento = rand() < probEntrada ? "entrada" : "saida";
     s.ocupacao = Math.max(0, s.ocupacao + (evento === "entrada" ? 1 : -1));
     return { sala: s.sala, sensor: "fluxo", evento };
