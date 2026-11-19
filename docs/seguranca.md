@@ -9,7 +9,8 @@
 | 5 | **Rate limiting**: 300 req/min por IP, 10 tentativas de login/min (anti força bruta) e limite separado de 6.000 leituras/min para os sensores IoT | `criarRateLimiter` | CT13, CT13b |
 | 6 | **Cabeçalhos de segurança**: CSP, `X-Content-Type-Options`, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy`; bloqueio de *path traversal* nos arquivos estáticos | `app.js` | CT14 |
 | 7 | **Proteção de dados (LGPD)**: só o primeiro nome é armazenado na reserva; nome mascarado em respostas de log e na visão do gestor; logs sem dados pessoais | `validarReserva`, `mascararNome` | CT06, CT08b, CT09 |
-| 8 | **Segredos fora do código**: `.env` no `.gitignore`; em `NODE_ENV=production` a aplicação **não sobe** sem `ADMIN_PASSWORD_HASH`, `TOKEN_SECRET` e `IOT_DEVICE_KEY` | `carregarConfig` | `evidencias/config-producao-sem-segredos.txt` |
+| 8 | **Segredos fora do código**: `.env` no `.gitignore`; em `NODE_ENV=production` a aplicação **não sobe** sem `ADMIN_PASSWORD_HASH`, `TOKEN_SECRET`, `IOT_DEVICE_KEY` e `PSEUDONIMO_SECRET` | `carregarConfig` | `evidencias/config-producao-sem-segredos.txt` |
 | 9 | **Container sem root** e imagem mínima (alpine, sem ferramentas de teste) | `Dockerfile` | build no CI |
+| 10 | **Pseudonimização no data lake (LGPD)**: o nome vira um código HMAC-SHA256 antes de ser gravado, e a descrição livre não é armazenada. Assim é possível contar pessoas e medir conversão sem saber quem são. Análises só para gestores autenticados, com validação dos filtros | `src/dados/ingestao.js`, rota `/api/admin/analises` | CT17, CT20, CT21 |
 
 > As credenciais `admin / conecta2026` e `dev-iot-key` existem **apenas** no modo de desenvolvimento, para a demonstração.

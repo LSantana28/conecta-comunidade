@@ -1,0 +1,23 @@
+ETL concluído em 500 ms · período 2026-08-21 a 2026-11-18
+
+QUALIDADE (bronze → prata)
+  arquivos lidos ........ 361
+  registros lidos ....... 43.635
+  válidos ............... 43.086 (98.74%)
+  duplicados removidos .. 186
+  datas normalizadas .... 109
+  rejeitados ............ 363 → quarentena/rejeitados.jsonl
+      json_invalido              88
+      perfil_hash_invalido       3
+      sala_invalida              197
+      temperatura_fora_da_faixa  75
+
+OURO (modelo estrela)
+  DIM   dim_servico                6 linhas
+  DIM   dim_turma                 18 linhas
+  DIM   dim_sala                   3 linhas
+  DIM   dim_data                  90 linhas
+  FATO  fato_busca              1956 linhas
+  FATO  fato_recomendacao       2494 linhas
+  FATO  fato_reserva             374 linhas
+  FATO  fato_ocupacao_hora      3390 linhas

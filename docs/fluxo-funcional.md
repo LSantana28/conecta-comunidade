@@ -40,4 +40,7 @@ sequenceDiagram
 6. Tela **Catálogo**: todas as vagas, filtros por categoria/turno e a barra **Ocupação agora** alimentada pelos sensores.
 7. Tela **Dashboard (gestão)**: login `admin` / `conecta2026` (demo). KPIs, utilização por serviço (laranja = menos de 50%, precisa de divulgação), demanda por interesse, salas IoT com alertas e últimas leituras — atualiza a cada 3 s.
 
-Screenshots de cada passo: `docs/evidencias/01` a `08`.
+8. Aba **Análises (Big Data)**: indicadores do data lake com filtros de período, eixo, turno e sala, comparados ao período anterior, mais o painel **O que decidir agora**. Exemplos: ampliar o plantão jurídico, abrir capacitação noturna na SALA-A (ociosa à noite), climatizar a SALA-C.
+9. Tudo o que foi feito nos passos 2 a 6 já foi gravado na camada bronze. Rode `npm run etl` e recarregue a tela de análises para ver os dados novos processados.
+
+Screenshots de cada passo: `docs/evidencias/01` a `10`.

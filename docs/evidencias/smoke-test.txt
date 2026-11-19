@@ -3,6 +3,7 @@ OK    GET / (frontend)
 OK    GET /api/servicos
 OK    POST /api/recomendacoes
 OK    GET /api/admin/dashboard sem token = 401
+OK    GET /api/admin/analises sem token = 401
 OK    GET /metrics
 
 Smoke test aprovado.
