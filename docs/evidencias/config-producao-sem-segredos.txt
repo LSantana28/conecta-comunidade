@@ -1,0 +1,1 @@
+    throw new Error("Em produção defina ADMIN_PASSWORD_HASH, TOKEN_SECRET e IOT_DEVICE_KEY.");

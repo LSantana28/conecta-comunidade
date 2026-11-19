@@ -1,0 +1,45 @@
+
+> conecta-comunidade@1.0.0 test:ci
+> node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml "tests/*.test.js"
+
+▶ API — fluxo do cidadão
+  ✔ CT06 — Fluxo completo: recomendar → reservar (saldo -1) → consultar → cancelar (saldo +1) (38.346791ms)
+  ✔ CT07 — Serviço esgotado retorna 409 e some das recomendações (15.511451ms)
+  ✔ CT08c — API devolve 400 com os campos inválidos, 400 para JSON malformado e 413 para corpo grande (6.52614ms)
+✔ API — fluxo do cidadão (62.184008ms)
+▶ API — segurança e gestão
+  ✔ CT09 — Dashboard exige login: sem token 401, senha errada 401, login correto 200 (85.604636ms)
+  ✔ CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação e temperatura (18.412054ms)
+  ✔ CT13b — Login bloqueado (429) após 10 tentativas por minuto (11.610685ms)
+  ✔ CT14 — Cabeçalhos de segurança (CSP etc.) e bloqueio de path traversal (5.152643ms)
+  ✔ CT15 — Monitoramento: /health responde ok e /metrics expõe métricas no formato Prometheus (3.252151ms)
+✔ API — segurança e gestão (124.675378ms)
+▶ Agente de recomendação
+  ✔ CT01 — Cenário emprego recomenda os 3 serviços de capacitação, ordenados e acima do score mínimo (3.123602ms)
+  ✔ CT01b — Cenário social/jurídico no turno da tarde prioriza o plantão jurídico (0.393225ms)
+  ✔ CT02 — Regra 1: serviço sem vagas nunca é recomendado (0.19063ms)
+  ✔ CT03 — Regra 2: turno incompatível retira exatamente 20 pontos (0.136834ms)
+  ✔ CT04 — Regra 3: selo 'Últimas vagas' (<=5) e reforço de visibilidade para turma ociosa (0.126729ms)
+  ✔ CT05 — Perfil sem aderência: nenhuma recomendação e encaminha ao acolhimento (0.515697ms)
+  ✔ CT05b — Acentos e maiúsculas não alteram o resultado (0.349463ms)
+✔ Agente de recomendação (5.823945ms)
+▶ Segurança — validação de entrada
+  ✔ CT08 — Rejeita nome com script (XSS), opção fora da lista e texto longo (1.146873ms)
+  ✔ CT08b — Escape de HTML e LGPD (minimização e máscara) (0.282241ms)
+✔ Segurança — validação de entrada (2.124518ms)
+▶ Segurança — autenticação
+  ✔ CT10 — Senha com hash scrypt e token HMAC com expiração (109.938061ms)
+  ✔ CT13 — Rate limiter bloqueia após o limite e libera na próxima janela (0.933607ms)
+✔ Segurança — autenticação (111.095983ms)
+▶ IoT — sensores simulados
+  ✔ CT12 — Leituras do simulador são aceitas pelo validador e ocupação nunca fica negativa (3.725752ms)
+  ✔ CT12b — Validador IoT rejeita sala, sensor e temperatura inválidos; chave comparada com segurança (0.287471ms)
+✔ IoT — sensores simulados (4.235332ms)
+ℹ tests 21
+ℹ suites 6
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 557.688822
