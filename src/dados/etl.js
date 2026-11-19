@@ -13,6 +13,7 @@ import path from "node:path";
 import readline from "node:readline";
 import { pathToFileURL } from "node:url";
 import { catalogoInicial } from "../core/catalogo.js";
+import { pastaDatalake } from "../caminhos.js";
 import { validarEvento, partesLocais, EIXO_POR_CATEGORIA, cicloDe, INICIO_CICLOS, DIAS_CICLO } from "./esquema.js";
 
 const NOMES_DIA = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
@@ -260,7 +261,7 @@ export async function executarETL(dir) {
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1]).href) {
-  const dir = path.resolve(process.env.DATALAKE_DIR || "datalake");
+  const dir = pastaDatalake();
   const c = await executarETL(dir);
   const q = c.qualidade;
   console.log(`ETL concluído em ${c.duracao_ms} ms · período ${c.periodo.inicio} a ${c.periodo.fim}\n`);

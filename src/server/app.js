@@ -8,10 +8,11 @@ import { NOMES_TURNO } from "../core/catalogo.js";
 import { criarStore } from "./store.js";
 import { criarIngestor } from "../dados/ingestao.js";
 import { criarAnalises } from "../dados/analises.js";
+import { pastaDatalake } from "../caminhos.js";
 import {
   validarPerfil, validarReserva, validarLeituraIoT, ErroValidacao,
   conferirSenha, gerarHashSenha, assinarToken, verificarToken,
-  chaveDispositivoValida, CABECALHOS_SEGURANCA, criarRateLimiter, mascararNome
+  chaveDispositivoValida, CABECALHOS_SEGURANCA, criarRateLimiter, mascararNome, chaveDocumento
 } from "./seguranca.js";
 
 const PUBLIC_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../public");
@@ -31,7 +32,7 @@ export function carregarConfig(env = process.env) {
     iotDeviceKey: env.IOT_DEVICE_KEY || "dev-iot-key",
     log: env.LOG !== "off",
     // Data lake: pasta raiz (bronze/prata/ouro). DATALAKE_DIR=off desliga a ingestão.
-    datalakeDir: env.DATALAKE_DIR === "off" ? null : path.resolve(env.DATALAKE_DIR || "datalake"),
+    datalakeDir: env.DATALAKE_DIR === "off" ? null : pastaDatalake(env.DATALAKE_DIR),
     // Segredo do pseudônimo LGPD — fixo por ambiente para que o mesmo cidadão gere o mesmo pseudônimo
     pseudonimoSecret: env.PSEUDONIMO_SECRET || "dev-pseudonimo"
   };
@@ -126,9 +127,9 @@ export function criarApp(config = carregarConfig()) {
 
     "POST /api/reservas": async req => {
       const corpo = await lerCorpo(req);
-      const dados = validarReserva(corpo);
-      const r = store.reservar(dados);
-      if (r.status === 409 || !r.erro) {
+      const { cpf, ...dados } = validarReserva(corpo);
+      const r = store.reservar({ ...dados, chaveCidadao: chaveDocumento(cpf, config.pseudonimoSecret ?? "dev-pseudonimo") });
+      if (r.motivo === "sem_vaga" || !r.erro) { // tentativa duplicada não é demanda nova: não vai ao data lake
         lake.registrar("reserva", {
           perfil_hash: lake.pseudonimo(corpo.nome), servico_id: dados.id_servico,
           resultado: r.erro ? "sem_vaga" : "confirmada", reserva_id: r.reserva?.protocolo ?? null

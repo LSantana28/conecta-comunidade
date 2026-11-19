@@ -17,7 +17,7 @@
     "ia:avaliar": "node scripts/avaliar-ia.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "license": "MIT"
 }

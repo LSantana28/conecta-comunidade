@@ -1,0 +1,4 @@
+# Quebra de linha padronizada (LF) para todos, inclusive quem usa Windows
+* text=auto eol=lf
+*.png binary
+*.pdf binary
