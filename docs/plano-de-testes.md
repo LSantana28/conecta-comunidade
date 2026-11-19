@@ -4,11 +4,12 @@
 **Automação:** roda a cada push/PR no GitHub Actions (Node 20 e 22) e dentro do `docker build`.
 **Evidências:** [`evidencias/execucao-testes.txt`](evidencias/execucao-testes.txt), [`evidencias/relatorio-testes-junit.xml`](evidencias/relatorio-testes-junit.xml), [`evidencias/smoke-test.txt`](evidencias/smoke-test.txt) e screenshots `01` a `08`.
 
-**Resultado da última execução:** 27 testes · 27 aprovados · 0 falhas.
+**Resultado da última execução:** 32 testes · 32 aprovados · 0 falhas.
 
 | ID | Tipo | Cenário | Passos / entrada | Resultado esperado | Status |
 |----|------|---------|------------------|--------------------|--------|
-| CT01 | Unitário (IA) | Cenário 1 — busca de emprego | Perfil "Procurando emprego", capacitação, qualquer turno | Recomenda SRV-02, SRV-01, SRV-03 em ordem decrescente, todos com score ≥ 60; próximo passo prioriza o serviço com 5 vagas | ✅ |
+| CT01 | Unitário (IA) | Cenário 1 — busca de emprego | Perfil "Procurando emprego", capacitação, qualquer turno | Agente v2 recomenda SRV-01, SRV-02 e SRV-03 em ordem de ranking, todos com score ≥ 60; próximo passo prioriza o serviço com 5 vagas | ✅ |
+| CT01v1 | Unitário (IA) | Versão 1 preservada | Mesmo perfil com `{ versao: 1 }` | Resultado idêntico ao protótipo original (97, 84, 85) | ✅ |
 | CT01b | Unitário (IA) | Cenário 2 — apoio social/jurídico | Perfil social/jurídico, turno tarde | Plantão jurídico (SRV-06) em 1º; só serviços sociais/jurídicos | ✅ |
 | CT02 | Unitário (IA) | Regra 1 — sem vagas | SRV-02 com `vagas = 0` | SRV-02 não aparece nas recomendações | ✅ |
 | CT03 | Unitário (IA) | Regra 2 — pesos 70/20/10 | Mesmo serviço, turno compatível × incompatível | Diferença de exatamente 20 pontos; soma das partes = score | ✅ |
@@ -28,6 +29,10 @@
 | CT13 | Unitário (segurança) | Rate limiter | 4 chamadas com limite 3 | 4ª bloqueada; libera na janela seguinte | ✅ |
 | CT13b | Integração (segurança) | Força bruta no login | 11 tentativas em 1 minuto | 11ª = 429 | ✅ |
 | CT14 | Integração (segurança) | Cabeçalhos e path traversal | `GET /` e `GET /%2e%2e/package.json` | CSP, nosniff, X-Frame-Options presentes; arquivo fora de `public/` não é servido | ✅ |
+| CT22 | Unitário (IA v2) | Vocabulário do dia a dia | "vendo artesanato e quero ganhar mais dinheiro"; "quero aprender a tocar violão" | v1 não recomenda nada; v2 recomenda a oficina; violão continua sem recomendação | ✅ |
+| CT23 | Unitário (IA v2) | Regra 5 — outro turno | Jurídico pedido à noite | v1 vazio; v2 sugere o plantão jurídico marcado "Outro turno", com aviso | ✅ |
+| CT24 | Unitário (IA v2) | Regra 6 — corte relativo | 38 perfis rotulados | Nenhuma lista com diferença acima de 20 pontos | ✅ |
+| CT25 | Avaliação (IA) | Ganho antes × depois | 16 perfis de validação + catálogo com jurídico esgotado | Acerto da 1ª sugestão: v2 > v1 > mural; ninguém sem resposta; sem vaga esgotada | ✅ |
 | CT16 | Unitário (Big Data) | Funções analíticas | DIVIDE por zero, PERCENTILE 0,9, média móvel, variação sem base, DATEADD, RANKX denso, AVERAGEX com vazios | Valores exatos esperados | ✅ |
 | CT17 | Unitário (Big Data/LGPD) | Ingestão na camada bronze | Evento de busca com o nome "Maria Silva" | Gravado em `bronze/busca/dt=…`, fuso −03:00, sem o nome; pseudônimo estável e dependente do segredo | ✅ |
 | CT18 | Integração (ETL) | Qualidade bronze → prata | 12 linhas: 1 duplicada, 1 data legada, 999 °C, sala inexistente, JSON cortado | 1 duplicado removido, 1 data normalizada, 3 na quarentena com motivo | ✅ |
@@ -49,6 +54,7 @@ Roteiro automatizado em `scripts/capturar-telas.py` (Playwright), percorrendo as
 | E2E-05 | Catálogo | Abrir tela com simulador ligado | Ocupação das salas atualizando | `06-catalogo.png` |
 | E2E-06 | Login | Senha errada | "Usuário ou senha incorretos." | `07-login-negado.png` |
 | E2E-07 | Dashboard | Login correto | KPIs, utilização, demanda e leituras IoT | `08-dashboard.png` |
+| E2E-10 | Recomendações IA | "Cenário 3: Renda" | Oficina de empreendedorismo com o cálculo da IA no card | `11-recomendacao-renda-v2.png` |
 | E2E-08 | Análises (Big Data) | Abrir a tela | Recomendações, 6 KPIs com variação, 4 gráficos | `09-analises-big-data.png` |
 | E2E-09 | Análises (Big Data) | Filtrar 90 dias + turno noite | Indicadores e gráficos recalculados, resumo do filtro | `10-analises-filtro-noite.png` |
 

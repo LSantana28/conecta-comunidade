@@ -187,7 +187,7 @@ Acesso: aba **Análises (Big Data)**, com login de gestor. Prints: `docs/evidenc
 3. **Climatizar a SALA-C à tarde:** 94 horas acima de 30 °C, medidas pelo sensor TMP36.
 4. **Reduzir faltas** na orientação profissional noturna (56% de comparecimento).
 5. **Divulgar** a oficina de empreendedorismo (21% das vagas usadas).
-6. **Revisar o vocabulário do agente** em geração de renda: 65% das buscas ficam sem resultado mesmo com vagas sobrando. Palavras como "vender", "doces" e "artesanato" não batem com as palavras-chave do serviço.
+6. **Revisar o vocabulário do agente** em geração de renda: 65% das buscas ficam sem resultado mesmo com vagas sobrando. Palavras como "vender", "doces" e "artesanato" não batem com as palavras-chave do serviço. → **Recomendação implementada:** a versão 2 do agente corrigiu isso. O ganho medido está em [`docs/ia/`](../ia/README.md). O histórico continua mostrando o problema porque foi gerado pela v1, antes da correção.
 
 > Os dados do histórico são sintéticos (gerados com semente fixa, para serem reproduzíveis). Os eventos reais da aplicação entram no mesmo bronze e passam pelo mesmo ETL.
 
