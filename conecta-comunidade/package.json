@@ -1,0 +1,22 @@
+{
+  "name": "conecta-comunidade",
+  "version": "1.0.0",
+  "description": "CitizenTech — plataforma que conecta cidadãos a vagas em cursos gratuitos, atendimentos sociais e serviços comunitários (ODS 10 e 11).",
+  "type": "module",
+  "main": "src/server/index.js",
+  "scripts": {
+    "start": "node src/server/index.js",
+    "dev": "node --watch src/server/index.js",
+    "iot": "node src/iot/simulador.js",
+    "test": "node --test --test-reporter=spec \"tests/*.test.js\"",
+    "test:ci": "node --test --test-reporter=spec --test-reporter-destination=stdout --test-reporter=junit --test-reporter-destination=test-results.xml \"tests/*.test.js\"",
+    "smoke": "node scripts/smoke.js",
+    "dados:gerar": "node src/dados/gerar-historico.js",
+    "etl": "node src/dados/etl.js",
+    "dados": "node src/dados/gerar-historico.js && node src/dados/etl.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

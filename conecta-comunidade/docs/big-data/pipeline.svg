@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 700" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <marker id="s" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#475569"/></marker>
+    <style>
+      .t { font-size: 13px; font-weight: 700; fill: #0f172a; }
+      .s { font-size: 11px; fill: #475569; }
+      .h { font-size: 12px; font-weight: 700; fill: #64748b; letter-spacing: 1px; }
+      .lig { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#s); }
+      .fonte { fill: #f8fafc; stroke: #64748b; stroke-width: 1.3; }
+      .proc { fill: #ffffff; stroke: #0f766e; stroke-width: 1.3; stroke-dasharray: 4 3; }
+      .bronze { fill: #fdf0e6; stroke: #b45309; stroke-width: 1.6; }
+      .prata { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.6; }
+      .ouro { fill: #fef9c3; stroke: #a16207; stroke-width: 1.6; }
+      .consumo { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.3; }
+      .q { fill: #fee2e2; stroke: #b91c1c; stroke-width: 1.3; }
+    </style>
+  </defs>
+  <rect width="1240" height="700" fill="#f4f7f6"/>
+  <text x="30" y="40" font-size="22" font-weight="700" fill="#115e59">Conecta Comunidade — Pipeline de dados (arquitetura medalhão)</text>
+  <text x="30" y="62" font-size="13" fill="#64748b">Da coleta ao dado tratado: fontes → ingestão → bronze → prata → ouro → decisão</text>
+
+  <text class="h" x="30" y="100">FONTES</text>
+  <rect class="fonte" x="30" y="112" width="170" height="64" rx="9"/>
+  <text class="t" x="42" y="135">Aplicação web</text><text class="s" x="42" y="153">buscas no agente IA,</text><text class="s" x="42" y="167">reservas, cancelamentos</text>
+  <rect class="fonte" x="30" y="190" width="170" height="64" rx="9"/>
+  <text class="t" x="42" y="213">Sensores IoT</text><text class="s" x="42" y="231">fluxo (HC-SR04) e</text><text class="s" x="42" y="245">temperatura (TMP36)</text>
+  <rect class="fonte" x="30" y="268" width="170" height="64" rx="9"/>
+  <text class="t" x="42" y="291">Recepção / histórico</text><text class="s" x="42" y="309">presenças + 90 dias</text><text class="s" x="42" y="323">(gerar-historico.js)</text>
+
+  <text class="h" x="236" y="100">INGESTÃO</text>
+  <rect class="proc" x="236" y="150" width="168" height="144" rx="9"/>
+  <text class="t" x="248" y="174">ingestao.js</text>
+  <text class="s" x="248" y="194">• envelope padrão do</text><text class="s" x="248" y="208">  evento (id, tipo, data)</text>
+  <text class="s" x="248" y="228">• LGPD: nome vira</text><text class="s" x="248" y="242">  pseudônimo (HMAC)</text>
+  <text class="s" x="248" y="262">• grava sem alterar,</text><text class="s" x="248" y="276">  fila assíncrona</text>
+
+  <text class="h" x="440" y="100">BRONZE · bruto</text>
+  <rect class="bronze" x="440" y="150" width="180" height="144" rx="9"/>
+  <text class="t" x="452" y="174">JSON Lines imutável</text>
+  <text class="s" x="452" y="196">bronze/&lt;tipo&gt;/</text><text class="s" x="452" y="210">  dt=AAAA-MM-DD/*.jsonl</text>
+  <text class="s" x="452" y="232">43.635 eventos · 361</text><text class="s" x="452" y="246">arquivos particionados</text>
+  <text class="s" x="452" y="268">inclui registros sujos</text><text class="s" x="452" y="282">(duplicados, falhas)</text>
+
+  <text class="h" x="656" y="100">ETL · limpeza</text>
+  <rect class="proc" x="656" y="150" width="168" height="144" rx="9"/>
+  <text class="t" x="668" y="174">etl.js (etapa 1)</text>
+  <text class="s" x="668" y="194">• valida o esquema</text>
+  <text class="s" x="668" y="212">• remove duplicados</text>
+  <text class="s" x="668" y="230">• normaliza datas e fuso</text>
+  <text class="s" x="668" y="248">• descarta leituras</text><text class="s" x="668" y="262">  impossíveis (999 °C)</text>
+  <text class="s" x="668" y="282">• 98,7% aproveitados</text>
+
+  <rect class="q" x="656" y="320" width="168" height="54" rx="9"/>
+  <text class="t" x="668" y="342">Quarentena</text><text class="s" x="668" y="360">363 rejeitados + motivo</text>
+
+  <text class="h" x="860" y="100">PRATA · limpo</text>
+  <rect class="prata" x="860" y="150" width="160" height="144" rx="9"/>
+  <text class="t" x="872" y="174">1 arquivo por tipo</text>
+  <text class="s" x="872" y="196">prata/&lt;tipo&gt;.jsonl</text>
+  <text class="s" x="872" y="218">ordenado no tempo,</text><text class="s" x="872" y="232">com data, hora e dia</text><text class="s" x="872" y="246">da semana locais</text>
+  <text class="s" x="872" y="268">43.086 registros</text>
+
+  <text class="h" x="1056" y="100">MODELAGEM</text>
+  <rect class="proc" x="1056" y="150" width="160" height="144" rx="9"/>
+  <text class="t" x="1068" y="174">etl.js (etapa 2)</text>
+  <text class="s" x="1068" y="194">• status final da reserva</text>
+  <text class="s" x="1068" y="212">• atribui reserva à</text><text class="s" x="1068" y="226">  recomendação (24 h)</text>
+  <text class="s" x="1068" y="246">• ocupação ponderada</text><text class="s" x="1068" y="260">  no tempo, por hora</text>
+  <text class="s" x="1068" y="280">• turmas por ciclo</text>
+
+  <!-- OURO -->
+  <text class="h" x="440" y="430">OURO · modelo estrela para decisão</text>
+  <rect class="ouro" x="440" y="442" width="580" height="200" rx="12"/>
+  <rect x="460" y="462" width="170" height="160" rx="8" fill="#fff" stroke="#a16207"/>
+  <text class="t" x="472" y="484">Dimensões</text>
+  <text class="s" x="472" y="506">dim_servico (6)</text><text class="s" x="472" y="526">dim_turma (18)</text><text class="s" x="472" y="546">dim_sala (3)</text><text class="s" x="472" y="566">dim_data (90)</text>
+  <rect x="650" y="462" width="350" height="160" rx="8" fill="#fff" stroke="#a16207"/>
+  <text class="t" x="662" y="484">Fatos</text>
+  <text class="s" x="662" y="506">fato_busca (1.956) — uma linha por busca</text>
+  <text class="s" x="662" y="526">fato_recomendacao (2.494) — serviço, posição, score</text>
+  <text class="s" x="662" y="546">fato_reserva (374) — status final e origem</text>
+  <text class="s" x="662" y="566">fato_ocupacao_hora (3.390) — sala × hora</text>
+  <text class="s" x="662" y="594">+ _catalogo.json (linhagem) e _qualidade.json</text>
+  <text class="s" x="662" y="610">formatos: CSV (Power BI) e JSON (API)</text>
+
+  <text class="h" x="1056" y="430">CONSUMO</text>
+  <rect class="consumo" x="1056" y="442" width="160" height="92" rx="9"/>
+  <text class="t" x="1068" y="466">Dashboard web</text><text class="s" x="1068" y="486">/api/admin/analises</text><text class="s" x="1068" y="502">6 indicadores, filtros,</text><text class="s" x="1068" y="518">recomendações</text>
+  <rect class="consumo" x="1056" y="550" width="160" height="92" rx="9"/>
+  <text class="t" x="1068" y="574">Power BI</text><text class="s" x="1068" y="594">importa os CSV</text><text class="s" x="1068" y="610">medidas em DAX</text><text class="s" x="1068" y="626">(medidas-dax.md)</text>
+
+  <text class="h" x="30" y="430">EXECUÇÃO</text>
+  <rect class="fonte" x="30" y="442" width="370" height="200" rx="12"/>
+  <text class="t" x="46" y="468">Como rodar</text>
+  <text class="s" x="46" y="492">npm run dados   → gera histórico + ETL completo</text>
+  <text class="s" x="46" y="512">npm run etl     → reprocessa bronze → ouro</text>
+  <text class="s" x="46" y="532">docker compose run --rm etl   → no container</text>
+  <text class="s" x="46" y="560">CI (GitHub Actions): job "Pipeline de dados" roda o</text>
+  <text class="s" x="46" y="576">ETL a cada push, falha se menos de 95% dos</text>
+  <text class="s" x="46" y="592">registros forem aproveitados e publica a camada</text>
+  <text class="s" x="46" y="608">ouro como artefato.</text>
+
+  <path class="lig" d="M200,144 L234,190"/><path class="lig" d="M200,222 L234,222"/><path class="lig" d="M200,300 L234,256"/>
+  <path class="lig" d="M404,222 L438,222"/><path class="lig" d="M620,222 L654,222"/><path class="lig" d="M824,222 L858,222"/>
+  <path class="lig" d="M1020,222 L1054,222"/><path class="lig" d="M740,294 L740,318"/>
+  <path class="lig" d="M1136,294 L1136,380 L930,380 L930,440"/>
+  <path class="lig" d="M1020,488 L1054,488"/><path class="lig" d="M1020,596 L1054,596"/>
+</svg>

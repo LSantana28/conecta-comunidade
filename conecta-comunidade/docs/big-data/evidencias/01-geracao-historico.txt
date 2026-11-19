@@ -1,0 +1,8 @@
+Histórico gerado em /home/claude/conecta-comunidade/datalake/bronze (2026-08-21 a 2026-11-18)
+Eventos: 43.449 · arquivos: 361 · registros sujos propositais: 658
+  busca         1.964
+  reserva       375
+  leitura_iot   40.816
+  presenca      260
+  cancelamento  34
+Tempo: 0.6 s

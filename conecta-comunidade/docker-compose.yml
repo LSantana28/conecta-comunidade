@@ -1,0 +1,37 @@
+# Sobe a plataforma + o simulador de sensores IoT.
+# Uso:  cp .env.example .env   (e ajuste os segredos)
+#       docker compose up --build
+services:
+  app:
+    build: .
+    image: conecta-comunidade:latest
+    ports:
+      - "3000:3000"
+    env_file: .env
+    volumes:
+      - datalake:/app/datalake   # eventos bronze persistem entre reinícios
+    restart: unless-stopped
+
+  # Pipeline de dados sob demanda:  docker compose run --rm etl
+  etl:
+    image: conecta-comunidade:latest
+    # gera/atualiza o histórico (sem apagar os eventos reais do app) e reprocessa bronze → ouro
+    command: ["sh", "-c", "node src/dados/gerar-historico.js && node src/dados/etl.js"]
+    volumes:
+      - datalake:/app/datalake
+    profiles: ["dados"]
+
+  iot-simulador:
+    image: conecta-comunidade:latest
+    command: ["node", "src/iot/simulador.js"]
+    environment:
+      API_URL: http://app:3000
+      INTERVALO_MS: "1500"
+    env_file: .env
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  datalake:

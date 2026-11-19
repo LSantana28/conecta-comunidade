@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 760" font-family="Segoe UI, system-ui, sans-serif">
+  <defs>
+    <marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#475569"/>
+    </marker>
+    <style>
+      .area { fill: #fff; stroke: #cbd5e1; stroke-width: 1.5; rx: 14; }
+      .titulo-area { font-size: 15px; font-weight: 700; fill: #115e59; }
+      .caixa { fill: #f0fdfa; stroke: #0f766e; stroke-width: 1.4; rx: 9; }
+      .caixa-iot { fill: #fffbeb; stroke: #d97706; stroke-width: 1.4; rx: 9; }
+      .caixa-ops { fill: #eff6ff; stroke: #2563eb; stroke-width: 1.4; rx: 9; }
+      .caixa-user { fill: #f8fafc; stroke: #64748b; stroke-width: 1.4; rx: 9; }
+      .t { font-size: 13px; font-weight: 600; fill: #0f172a; }
+      .s { font-size: 11px; fill: #475569; }
+      .lig { stroke: #475569; stroke-width: 1.6; fill: none; marker-end: url(#seta); }
+      .lig-trac { stroke: #475569; stroke-width: 1.4; fill: none; stroke-dasharray: 5 4; marker-end: url(#seta); }
+      .rot { font-size: 10.5px; fill: #334155; }
+    </style>
+  </defs>
+  <rect width="1240" height="760" fill="#f4f7f6"/>
+  <text x="30" y="40" font-size="22" font-weight="700" fill="#115e59">Conecta Comunidade — Arquitetura geral</text>
+  <text x="30" y="62" font-size="13" fill="#64748b">Usuários · Frontend · Backend/IA · IoT · Dados · DevOps</text>
+
+  <!-- USUÁRIOS -->
+  <rect class="area" x="30" y="90" width="190" height="300"/>
+  <text class="titulo-area" x="48" y="116">1. Usuários</text>
+  <rect class="caixa-user" x="48" y="135" width="154" height="70"/>
+  <text class="t" x="60" y="160">Cidadão</text>
+  <text class="s" x="60" y="178">navegador / celular</text>
+  <text class="s" x="60" y="193">busca, agenda, cancela</text>
+  <rect class="caixa-user" x="48" y="225" width="154" height="70"/>
+  <text class="t" x="60" y="250">Gestor / Instituição</text>
+  <text class="s" x="60" y="268">acompanha demanda,</text>
+  <text class="s" x="60" y="283">vagas e ocupação</text>
+
+  <!-- FRONTEND -->
+  <rect class="area" x="260" y="90" width="230" height="300"/>
+  <text class="titulo-area" x="278" y="116">2. Frontend (SPA)</text>
+  <rect class="caixa" x="278" y="132" width="194" height="40"/><text class="t" x="290" y="157">Recomendações IA</text>
+  <rect class="caixa" x="278" y="180" width="194" height="40"/><text class="t" x="290" y="205">Catálogo de vagas</text>
+  <rect class="caixa" x="278" y="228" width="194" height="40"/><text class="t" x="290" y="253">Meus agendamentos</text>
+  <rect class="caixa" x="278" y="276" width="194" height="40"/><text class="t" x="290" y="301">Dashboard + Análises</text>
+  <text class="s" x="278" y="340">HTML + CSS + JS (módulos ES)</text>
+  <text class="s" x="278" y="356">CSP · escape de HTML (anti-XSS)</text>
+
+  <!-- BACKEND -->
+  <rect class="area" x="530" y="90" width="400" height="390"/>
+  <text class="titulo-area" x="548" y="116">3. Backend — API REST (Node.js)</text>
+  <rect class="caixa" x="548" y="132" width="364" height="56"/>
+  <text class="t" x="560" y="155">Camada de segurança</text>
+  <text class="s" x="560" y="174">validação · rate limit · headers · token HMAC · chave IoT</text>
+  <rect class="caixa" x="548" y="200" width="174" height="80"/>
+  <text class="t" x="560" y="224">Rotas da API</text>
+  <text class="s" x="560" y="243">/api/servicos · /reservas</text>
+  <text class="s" x="560" y="258">/recomendacoes · /auth</text>
+  <text class="s" x="560" y="273">/admin/* · /iot/*</text>
+  <rect class="caixa" x="738" y="200" width="174" height="80"/>
+  <text class="t" x="750" y="224">Agente IA</text>
+  <text class="s" x="750" y="243">core/recomendacao.js</text>
+  <text class="s" x="750" y="258">score 70/20/10 + regras</text>
+  <text class="s" x="750" y="273">de vagas e visibilidade</text>
+  <rect class="caixa" x="548" y="294" width="174" height="70"/>
+  <text class="t" x="560" y="318">Store (repositório)</text>
+  <text class="s" x="560" y="337">serviços · reservas</text>
+  <text class="s" x="560" y="352">leituras IoT · demanda</text>
+  <rect class="caixa" x="738" y="294" width="174" height="70"/>
+  <text class="t" x="750" y="318">Data lake + Analytics</text>
+  <text class="s" x="750" y="337">bronze → prata → ouro</text>
+  <text class="s" x="750" y="352">ETL · /api/admin/analises</text>
+  <rect class="caixa" x="548" y="378" width="364" height="44"/>
+  <text class="t" x="560" y="405">Monitoramento</text>
+  <text class="s" x="668" y="405">/health · /metrics (Prometheus) · logs JSON</text>
+  <text class="s" x="548" y="450">Operação em memória · todo evento vai ao data lake (docs/big-data)</text>
+
+  <!-- IOT -->
+  <rect class="area" x="970" y="90" width="240" height="390"/>
+  <text class="titulo-area" x="988" y="116">4. IoT — salas</text>
+  <rect class="caixa-iot" x="988" y="132" width="204" height="96"/>
+  <text class="t" x="1000" y="155">Nó de sala (Arduino)</text>
+  <text class="s" x="1000" y="174">HC-SR04: fluxo na porta</text>
+  <text class="s" x="1000" y="189">TMP36: temperatura</text>
+  <text class="s" x="1000" y="204">LEDs + buzzer de alerta</text>
+  <text class="s" x="1000" y="219">TinkerCad / hardware real</text>
+  <rect class="caixa-iot" x="988" y="248" width="204" height="56"/>
+  <text class="t" x="1000" y="271">Gateway serial → HTTP</text>
+  <text class="s" x="1000" y="290">gateway-serial.js</text>
+  <rect class="caixa-iot" x="988" y="324" width="204" height="70"/>
+  <text class="t" x="1000" y="347">Simulador (mock)</text>
+  <text class="s" x="1000" y="366">simulador.js · 3 salas</text>
+  <text class="s" x="1000" y="381">mesmo formato JSON</text>
+  <text class="s" x="988" y="420">POST /api/iot/leituras</text>
+  <text class="s" x="988" y="436">header X-Device-Key</text>
+
+  <!-- DEVOPS -->
+  <rect class="area" x="30" y="510" width="1180" height="220"/>
+  <text class="titulo-area" x="48" y="536">5. DevOps — versionamento, CI/CD e execução</text>
+  <rect class="caixa-ops" x="48" y="556" width="170" height="70"/>
+  <text class="t" x="60" y="580">Git + GitHub</text>
+  <text class="s" x="60" y="598">main / develop</text>
+  <text class="s" x="60" y="613">pull requests</text>
+  <rect class="caixa-ops" x="258" y="556" width="200" height="70"/>
+  <text class="t" x="270" y="580">GitHub Actions</text>
+  <text class="s" x="270" y="598">testes (Node 20 e 22)</text>
+  <text class="s" x="270" y="613">relatório JUnit</text>
+  <rect class="caixa-ops" x="498" y="556" width="200" height="70"/>
+  <text class="t" x="510" y="580">Docker build</text>
+  <text class="s" x="510" y="598">multi-stage (testa no build)</text>
+  <text class="s" x="510" y="613">usuário sem root</text>
+  <rect class="caixa-ops" x="738" y="556" width="200" height="70"/>
+  <text class="t" x="750" y="580">Smoke test</text>
+  <text class="s" x="750" y="598">container healthy</text>
+  <text class="s" x="750" y="613">scripts/smoke.js</text>
+  <rect class="caixa-ops" x="978" y="556" width="214" height="70"/>
+  <text class="t" x="990" y="580">Registry (GHCR)</text>
+  <text class="s" x="990" y="598">imagem :latest e :sha</text>
+  <text class="s" x="990" y="613">deploy via docker compose</text>
+  <text class="s" x="48" y="660">docker compose: serviço app (porta 3000, HEALTHCHECK em /health) + serviço iot-simulador → app</text>
+  <text class="s" x="48" y="678">Alternativa: Jenkinsfile com as mesmas etapas · Segredos via .env (nunca versionado)</text>
+
+  <!-- LIGAÇÕES -->
+  <path class="lig" d="M202,170 L276,170"/>
+  <path class="lig" d="M202,260 L276,296"/>
+  <path class="lig" d="M472,224 L546,224"/>
+  <text class="rot" x="478" y="216">HTTPS/JSON</text>
+  <path class="lig" d="M722,240 L736,240"/>
+  <path class="lig" d="M635,280 L635,292"/>
+  <path class="lig" d="M722,329 L736,329"/>
+  <path class="lig" d="M1090,228 L1090,246"/>
+  <path class="lig" d="M986,276 L930,230"/>
+  <path class="lig" d="M986,359 L930,330"/>
+  <text class="rot" x="934" y="268">leituras</text>
+  <path class="lig" d="M218,591 L256,591"/>
+  <path class="lig" d="M458,591 L496,591"/>
+  <path class="lig" d="M698,591 L736,591"/>
+  <path class="lig" d="M938,591 L976,591"/>
+  <path class="lig-trac" d="M730,556 L730,484"/>
+  <text class="rot" x="738" y="500">deploy do container</text>
+</svg>
