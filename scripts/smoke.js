@@ -11,6 +11,7 @@ const checagens = [
     body: JSON.stringify({ cidadao: "Teste Smoke", situacao_atual: "Procurando emprego", interesse_principal: "Capacitação profissional", turno_disponivel: "qualquer", descricao_livre: "curso de informatica" })
   }).then(async r => r.ok && (await r.json()).saida.recomendacoes.length > 0)],
   ["GET /api/admin/dashboard sem token = 401", () => fetch(`${base}/api/admin/dashboard`).then(r => r.status === 401)],
+  ["GET /api/admin/analises sem token = 401", () => fetch(`${base}/api/admin/analises`).then(r => r.status === 401)],
   ["GET /metrics", () => fetch(`${base}/metrics`).then(async r => r.ok && (await r.text()).includes("conecta_requisicoes_total"))]
 ];
 
