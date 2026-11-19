@@ -14,7 +14,8 @@ Requisito: **Node.js 20+** (não há dependências para instalar).
 npm start          # http://localhost:3000
 npm run iot        # em outro terminal: simulador dos sensores IoT
 npm run dados      # (re)gera o histórico de 90 dias e roda o ETL do data lake
-npm test           # 27 testes automatizados
+npm test           # 32 testes automatizados
+npm run ia:avaliar # avaliação antes × depois do agente IA
 npm run smoke      # smoke test contra a aplicação no ar
 ```
 
@@ -31,6 +32,52 @@ docker compose run --rm etl                    # reprocessa o data lake no conta
 Login do dashboard em modo de desenvolvimento: `admin` / `conecta2026`.
 
 ## Mapa de entregas da Global Solution
+
+### Área 1 — IA e automação
+
+Documentação completa em [`docs/ia/`](docs/ia/README.md), com versão em PDF pronta para o relatório: [`docs/ia/area1-ia-e-automacao.pdf`](docs/ia/area1-ia-e-automacao.pdf).
+
+O agente **Conecta-IA** resolve uma parte real do problema: entende o pedido escrito do jeito do cidadão ("to sem trampo", "vendo artesanato") e indica, entre as vagas da comunidade, as que ele consegue usar de fato (necessidade, horário e vagas restantes), com justificativa e próximo passo.
+
+| Item | Entrega | Onde |
+|------|---------|------|
+| **01 · IA aplicada** | Agente de recomendação implementado e integrado à plataforma: interpreta texto livre, pontua o catálogo com o saldo de vagas em tempo real, ranqueia, explica o cálculo e decide o próximo passo (reservar, confirmar outro turno ou encaminhar ao acolhimento) | `src/core/recomendacao.js`, `POST /api/recomendacoes`, tela **Recomendações IA** |
+| **02 · Prompts, agentes ou automação** | System prompt completo do agente (papel, entrada, 6 regras, vocabulário, privacidade, formato JSON de saída e exemplo), tabela regra → código → teste, e 9 regras de automação da plataforma (baixa de vaga, devolução, alertas IoT, ingestão no data lake, insights do gestor, CI) | [`docs/ia/prompt-do-agente.md`](docs/ia/prompt-do-agente.md) e PDF |
+| **03 · Demonstração** | 3 cenários na tela, cálculo visível em cada card ("objetivo 70/70 · turno 20/20 · impacto 7/10") e JSON de entrada e saída de 5 cenários (incluindo v1 × v2) | prints `01`–`04` e `11`, [`docs/ia/evidencias/exemplos-entrada-saida.json`](docs/ia/evidencias/exemplos-entrada-saida.json) |
+| **04 · Lógica e ganho** | Avaliação **antes × depois** com gabarito de 54 perfis (38 de ajuste + 16 de validação nunca usados no ajuste): mural de vagas sem IA × agente v1 × agente v2 | [`docs/ia/evidencias/avaliacao-antes-depois.md`](docs/ia/evidencias/avaliacao-antes-depois.md), `npm run ia:avaliar` |
+
+**Ganho medido** (conjunto de validação):
+
+| Métrica | Antes: mural sem IA | Agente v1 | **Agente v2** |
+|---|---:|---:|---:|
+| 1ª sugestão é adequada | 64,3% | 85,7% | **92,9%** |
+| Sugestões que são adequadas (precisão) | 53,6% | 81,3% | **82,4%** |
+| Tinha opção certa e ficou sem resposta | 0% | 14,3% | **0%** |
+| Viu serviço esgotado | 37,5% | 0% | **0%** |
+| Pedido fora do catálogo → encaminhou ao acolhimento | 0% | 100% | **100%** |
+
+A v2 nasceu do dashboard de Big Data, que mostrou buscas de "geração de renda" sem resultado mesmo com vagas sobrando. Ela acrescenta três coisas:
+- **Vocabulário do dia a dia:** 47 equivalências entre palavras comuns e as palavras-chave dos serviços.
+- **Regra 5:** sem opção no turno pedido, sugere a mais próxima em outro turno, avisando.
+- **Regra 6:** descarta opções mais de 20 pontos abaixo da melhor.
+
+**Exemplo de entrada e saída** (o mesmo pedido nas duas versões):
+
+```json
+// Entrada
+{ "cidadao": "Joana Souza", "situacao_atual": "Buscando renda extra / empreender",
+  "interesse_principal": "Geração de renda", "turno_disponivel": "noite",
+  "descricao_livre": "vendo artesanato e quero ganhar mais dinheiro" }
+
+// Saída — agente v1: nenhuma recomendação ("vendo", "artesanato" e "dinheiro" não eram reconhecidos)
+// Saída — agente v2 (atual), resumida:
+{ "agente": "Conecta-IA-v2",
+  "recomendacoes": [ { "id_servico": "SRV-04", "titulo": "Oficina de Empreendedorismo e Microcrédito Comunitário",
+                       "score_compatibilidade": 97, "prioridade": "Alta aderência", "vagas_disponiveis": 12 } ],
+  "proximo_passo_sugerido": "Reservar \"Oficina de Empreendedorismo e Microcrédito Comunitário\", a opção de maior compatibilidade.",
+  "_detalhe_regras": [ { "id_servico": "SRV-04", "palavras_chave_acertadas": 5, "pontos_objetivo_70": 70,
+                         "pontos_turno_20": 20, "pontos_impacto_social_10": 7, "score_ranking": 97 } ] }
+```
 
 ### Área 2 — Big Data e visualização
 
@@ -59,14 +106,14 @@ Documentação completa em [`docs/big-data/`](docs/big-data/README.md).
 | **Organização** | Módulos separados (núcleo IA, servidor, IoT, frontend, testes, docs) e histórico Git com commits por etapa | estrutura abaixo, `git log` |
 | **DevOps** | Dockerfile multi-stage (testa no build, roda sem root, HEALTHCHECK), docker compose (app + IoT + ETL, volume do data lake), pipeline **GitHub Actions** (testes Node 20/22 → pipeline de dados com checagem de qualidade → build → container healthy → smoke test → publica no GHCR), Jenkinsfile alternativo, monitoramento `/health` e `/metrics` (Prometheus) e logs JSON | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `Jenkinsfile` |
 | **Segurança** | 10 práticas: pseudonimização LGPD no data lake, validação de entrada, anti-XSS + CSP, senha scrypt + token HMAC, chave de dispositivo IoT, rate limit, cabeçalhos, LGPD (minimização e máscara), segredos obrigatórios em produção, container sem root | `docs/seguranca.md` |
-| **Testes** | Plano com 27 casos automatizados + 9 E2E, todos aprovados, com evidências | `docs/plano-de-testes.md`, `docs/evidencias/` |
+| **Testes** | Plano com 32 casos automatizados + 10 E2E, todos aprovados, com evidências | `docs/plano-de-testes.md`, `docs/evidencias/` |
 
 ## Estrutura
 
 ```
 conecta-comunidade/
 ├── src/
-│   ├── core/            # Agente IA (regras puras, sem I/O) + catálogo
+│   ├── core/            # Agente IA (regras puras, sem I/O), catálogo e avaliação antes × depois
 │   ├── server/          # API REST, segurança, store em memória
 │   ├── dados/           # Data lake: ingestão, gerador, ETL, medidas e análises
 │   └── iot/             # Simulador de sensores e gateway serial
@@ -75,8 +122,8 @@ conecta-comunidade/
 │   └── js/telas/        # Uma tela por arquivo
 ├── iot/arduino/         # Sketch do nó de sala (TinkerCad)
 ├── tests/               # Testes unitários e de integração (node:test)
-├── scripts/             # smoke test, gerar hash, captura de telas
-├── docs/                # Arquitetura, fluxo, testes, segurança, evidências
+├── scripts/             # smoke test, avaliação da IA, PDF da Área 1, gerar hash, captura de telas
+├── docs/                # Arquitetura, IA, Big Data, fluxo, testes, segurança, evidências
 ├── .github/workflows/   # CI/CD
 ├── Dockerfile · docker-compose.yml · Jenkinsfile
 ```

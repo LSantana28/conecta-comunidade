@@ -1,0 +1,11 @@
+node_modules
+.git
+.github
+.env
+docs
+iot
+*.md
+test-results.xml
+datalake/bronze
+datalake/prata
+datalake/quarentena

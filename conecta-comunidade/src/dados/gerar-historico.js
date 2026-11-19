@@ -156,7 +156,8 @@ export function gerarHistorico({ dir, dias = 90, fim = "2026-11-18", semente = 2
       const pessoa = escolher(pessoas);
       const turno = ponderado(perfilTipo.turnos);
       const entrada = { cidadao: "Pessoa", situacao_atual: perfilTipo.situacao, interesse_principal: perfilTipo.interesse, turno_disponivel: turno, descricao_livre: escolher(perfilTipo.textos) };
-      const saida = avaliar(entrada, catalogoDoDia.map(s => ({ ...s, vagas: vagasDe(s.id, data) })), NOMES_TURNO);
+      // O histórico (ago–nov/2026) foi produzido pela versão 1 do agente, anterior à melhoria de vocabulário
+      const saida = avaliar(entrada, catalogoDoDia.map(s => ({ ...s, vagas: vagasDe(s.id, data) })), NOMES_TURNO, { versao: 1 });
       emitir("busca", quando, {
         perfil_hash: pessoa, situacao: entrada.situacao_atual, interesse: entrada.interesse_principal, turno,
         recomendados: saida.recomendacoes.map((r, k) => ({ servico_id: r.id_servico, score: r.score_compatibilidade, posicao: k + 1 }))
