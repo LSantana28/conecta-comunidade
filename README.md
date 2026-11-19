@@ -4,6 +4,10 @@
 
 Plataforma que conecta cidadãos a vagas em **cursos gratuitos, capacitações, atendimentos sociais e serviços comunitários**. Um agente de IA recomenda as vagas mais compatíveis com o perfil da pessoa e sensores IoT medem a ocupação das salas. Todo evento alimenta um **data lake** (bronze → prata → ouro), e um dashboard analítico transforma esses dados em decisões: onde abrir turmas, o que divulgar e qual sala climatizar.
 
+> **Vídeo pitch:** [PREENCHER COM O LINK PÚBLICO DO VÍDEO]
+> **Entregáveis (arquitetura, prints e evidências de cada área):** [`Conecta-Comunidade-Entregaveis.pdf`](Conecta-Comunidade-Entregaveis.pdf)
+> **Integrantes:** veja [`ENTREGA.txt`](ENTREGA.txt) · **Roteiro do pitch:** [`docs/roteiro-pitch.md`](docs/roteiro-pitch.md)
+
 ![Arquitetura](docs/arquitetura.png)
 
 ## Como rodar
@@ -108,6 +112,17 @@ Documentação completa em [`docs/big-data/`](docs/big-data/README.md).
 | **Segurança** | 11 práticas: uma vaga por pessoa em cada serviço (CPF validado, guardado só como chave HMAC), pseudonimização LGPD no data lake, validação de entrada, anti-XSS + CSP, senha scrypt + token HMAC, chave de dispositivo IoT, rate limit, cabeçalhos, LGPD (minimização e máscara), segredos obrigatórios em produção, container sem root | `docs/seguranca.md` |
 | **Testes** | Plano com 33 casos automatizados + 11 E2E, todos aprovados, com evidências | `docs/plano-de-testes.md`, `docs/evidencias/` |
 
+## Código por área
+
+As 4 áreas resolvem o mesmo problema e estão integradas: a IA usa o saldo de vagas da operação, os sensores alimentam o dashboard e todo evento vai para o data lake.
+
+| Área | Código | Como rodar e ver funcionando |
+|------|--------|------------------------------|
+| **1 · IA e automação** | `src/core/recomendacao.js` (agente), `src/core/avaliacao.js` (gabarito e métricas), `scripts/avaliar-ia.js` | `npm start` → aba **Recomendações IA**; `npm run ia:avaliar` (antes × depois) |
+| **2 · Big Data e visualização** | `src/dados/` (ingestão, gerador, ETL, medidas, análises), `datalake/`, `public/js/telas/analises.js` | `npm run dados` → `npm start` → aba **Análises (Big Data)** (`admin` / `conecta2026`) |
+| **3 · MVP, IoT e experiência digital** | `public/` (6 telas), `src/server/` (API), `src/iot/` (simulador e gateway), `iot/arduino/no_sala.ino` (TinkerCad) | `npm start` + `npm run iot` → abas Catálogo e Dashboard |
+| **4 · DevOps, segurança e qualidade** | `Dockerfile`, `docker-compose.yml`, `.github/workflows/ci.yml`, `Jenkinsfile`, `src/server/seguranca.js`, `tests/` | `npm test`; `docker compose up --build`; aba Actions do GitHub |
+
 ## Estrutura
 
 ```
@@ -154,3 +169,14 @@ conecta-comunidade/
 ## Evolução prevista
 
 Banco de dados (PostgreSQL) no lugar do store em memória, data lake em armazenamento de objetos (S3/Azure Blob) com Parquet, cadastro das instituições e notificações por WhatsApp/SMS.
+
+## Uso de IA generativa
+
+Declaração exigida pelas regras da Global Solution.
+
+| Ferramenta | Para quê |
+|---|---|
+| Claude (Anthropic) | Apoio no desenvolvimento a partir do protótipo inicial da equipe (agente de recomendação em HTML/JS): organização do código em módulos, API, telas, simulador IoT, pipeline de dados, testes automatizados, configuração de Docker e CI, e redação da documentação. Também usado para explicar erros e revisar textos. |
+
+A equipe revisou o código e a documentação, executou os testes e o roteiro de demonstração e é responsável pelo conteúdo entregue. As decisões de produto (problema, público, regras do agente, uma vaga por pessoa) foram da equipe.
+

@@ -1,4 +1,4 @@
-﻿name: CI/CD â€” Conecta Comunidade
+name: CI/CD â€” Conecta Comunidade
 
 on:
   push:
