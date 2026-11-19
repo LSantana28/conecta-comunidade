@@ -39,6 +39,12 @@ with sync_playwright() as p:
     pg.wait_for_selector("[data-erro=cidadao]:not([hidden])")
     shot("04-validacao-entrada.png")
 
+    # 3b. Cenário de renda: vocabulário do dia a dia (melhoria da v2) e cálculo do score
+    pg.click("text=Cenário 3: Renda")
+    pg.wait_for_selector(".card .calculo")
+    pg.wait_for_timeout(300)
+    shot("11-recomendacao-renda-v2.png")
+
     # 4. Meus agendamentos
     pg.goto(BASE + "/#/agendamentos")
     pg.wait_for_selector(".card")
