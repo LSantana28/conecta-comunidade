@@ -8,7 +8,18 @@ services:
     ports:
       - "3000:3000"
     env_file: .env
+    volumes:
+      - datalake:/app/datalake   # eventos bronze persistem entre reinícios
     restart: unless-stopped
+
+  # Pipeline de dados sob demanda:  docker compose run --rm etl
+  etl:
+    image: conecta-comunidade:latest
+    # gera/atualiza o histórico (sem apagar os eventos reais do app) e reprocessa bronze → ouro
+    command: ["sh", "-c", "node src/dados/gerar-historico.js && node src/dados/etl.js"]
+    volumes:
+      - datalake:/app/datalake
+    profiles: ["dados"]
 
   iot-simulador:
     image: conecta-comunidade:latest
@@ -21,3 +32,6 @@ services:
       app:
         condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  datalake:

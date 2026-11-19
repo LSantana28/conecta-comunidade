@@ -13,6 +13,13 @@ pipeline {
       steps { sh 'npm run test:ci' }
       post { always { junit 'test-results.xml' } }
     }
+    stage('Pipeline de dados') {
+      agent { docker { image 'node:22-alpine' } }
+      steps {
+        sh 'rm -rf datalake/bronze datalake/prata && npm run dados'
+        archiveArtifacts artifacts: 'datalake/ouro/**', fingerprint: true
+      }
+    }
     stage('Build Docker') {
       steps { sh 'docker build -t $IMAGEM .' }
     }

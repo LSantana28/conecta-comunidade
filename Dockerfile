@@ -16,6 +16,9 @@ COPY --from=teste /app/package.json ./
 COPY --from=teste /app/src ./src
 COPY --from=teste /app/public ./public
 COPY --from=teste /app/scripts ./scripts
+# Camada OURO do data lake já processada (o dashboard de Big Data funciona logo ao subir)
+COPY --chown=node:node datalake/ouro ./datalake/ouro
+RUN mkdir -p /app/datalake/bronze && chown -R node:node /app/datalake
 
 # Segurança: roda como usuário sem privilégios
 USER node

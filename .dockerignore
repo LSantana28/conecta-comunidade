@@ -6,3 +6,6 @@ docs
 iot
 *.md
 test-results.xml
+datalake/bronze
+datalake/prata
+datalake/quarentena
