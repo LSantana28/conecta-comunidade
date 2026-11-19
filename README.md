@@ -32,6 +32,34 @@ Login do dashboard em modo de desenvolvimento: `admin` / `conecta2026`.
 
 ## Mapa de entregas da Global Solution
 
+### Área 1 — Inteligência Artificial: agente de recomendação
+
+O **Conecta-IA** recebe o perfil do cidadão e devolve as até 3 oportunidades mais compatíveis, cada uma com score, prioridade, justificativa e próximo passo sugerido. As regras ficam isoladas em um módulo puro, sem tela e sem banco, e por isso podem ser testadas e reutilizadas pela API, pela tela e pelo gerador de dados.
+
+| Item | Entrega | Onde |
+|------|---------|------|
+| **Problema e objetivo** | Vagas gratuitas não chegam a quem precisa. O agente cruza a necessidade da pessoa com o catálogo e prioriza o que ela pode usar de fato (horário, vagas restantes, impacto social) | `src/core/recomendacao.js` |
+| **Entrada** | Perfil com nome, situação atual, interesse principal, turno disponível e descrição livre (até 500 caracteres), validado no servidor | `POST /api/recomendacoes`, `src/server/seguranca.js` |
+| **Regras de decisão** | **Regra 1:** só recomenda serviços com vagas. **Regra 2:** score = 70% aderência ao objetivo (palavras-chave da descrição × tags do serviço) + 20% turno + 10% impacto social, com mínimo de 60. **Regra 3:** selo "Últimas vagas" (≤ 5) e +5 no ranking para turmas ociosas que começam em até 7 dias. **Regra 4:** baixa imediata no saldo ao agendar | `src/core/recomendacao.js`, `src/server/store.js` |
+| **Saída estruturada** | JSON com resumo do perfil, recomendações (score, prioridade, justificativa), próximo passo e o detalhamento dos pontos de cada regra, para explicar a decisão | aba *Evidência técnica* na tela de Recomendações |
+| **Cenários de uso** | Emprego → Qualificação (97%), Orientação (85%, últimas vagas), Informática (84%) · Social/Jurídico à tarde → Plantão Jurídico em 1º · Perfil sem aderência → encaminha ao acolhimento social | botões de cenário na tela, prints `01`–`03` |
+| **Validação e melhoria contínua** | 7 testes automatizados cobrem as 4 regras e os cenários. No data lake, o dashboard mede a conversão das recomendações em reservas e apontou um ajuste: o vocabulário de "geração de renda" não reconhece palavras como "vender" e "artesanato" | `tests/recomendacao.test.js` (CT01–CT05b), tela Análises |
+
+Exemplo de saída (Cenário 1, resumido):
+
+```json
+{
+  "agente": "Conecta-IA-v1",
+  "resumo_perfil": "Maria Silva: procurando emprego, interesse em capacitação profissional, disponibilidade: qualquer horário.",
+  "recomendacoes": [
+    { "id_servico": "SRV-02", "score_compatibilidade": 97, "prioridade": "Alta aderência", "vagas_disponiveis": 8 },
+    { "id_servico": "SRV-01", "score_compatibilidade": 84, "prioridade": "Turma começando em breve", "vagas_disponiveis": 15 },
+    { "id_servico": "SRV-03", "score_compatibilidade": 85, "prioridade": "Últimas vagas", "vagas_disponiveis": 5 }
+  ],
+  "proximo_passo_sugerido": "Reservar primeiro \"Orientação Profissional e Revisão de Currículo\" devido ao número reduzido de vagas (5)."
+}
+```
+
 ### Área 2 — Big Data e visualização
 
 Documentação completa em [`docs/big-data/`](docs/big-data/README.md).
