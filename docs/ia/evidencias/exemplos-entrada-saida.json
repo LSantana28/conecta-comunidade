@@ -1,0 +1,256 @@
+[
+  {
+    "cenario": "Busca de emprego",
+    "entrada": {
+      "cidadao": "Maria Silva",
+      "situacao_atual": "Procurando emprego",
+      "interesse_principal": "Capacitação profissional",
+      "turno_disponivel": "qualquer",
+      "descricao_livre": "Estou desempregada há 3 meses, quero melhorar meu currículo e fazer cursos gratuitos para voltar ao mercado."
+    },
+    "saida": {
+      "agente": "Conecta-IA-v2",
+      "resumo_perfil": "Maria Silva: procurando emprego, interesse em capacitação profissional, disponibilidade: qualquer horário.",
+      "recomendacoes": [
+        {
+          "id_servico": "SRV-01",
+          "titulo": "Curso Gratuito de Informática Básica e Pacote Office",
+          "instituicao": "Centro Comunitário Esperança",
+          "categoria": "Capacitação Profissional",
+          "turno": "manha",
+          "vagas_disponiveis": 15,
+          "score_compatibilidade": 98,
+          "prioridade": "Turma começando em breve",
+          "reforco_visibilidade": true,
+          "justificativa": "Desenvolve habilidades digitais exigidas na maioria das vagas atuais, aumentando rapidamente sua competitividade no mercado."
+        },
+        {
+          "id_servico": "SRV-03",
+          "titulo": "Orientação Profissional e Revisão de Currículo",
+          "instituicao": "Casa do Trabalhador",
+          "categoria": "Empregabilidade",
+          "turno": "noite",
+          "vagas_disponiveis": 5,
+          "score_compatibilidade": 99,
+          "prioridade": "Últimas vagas",
+          "reforco_visibilidade": false,
+          "justificativa": "Atendimento individual para estruturar seu currículo e preparar você para entrevistas enquanto conclui sua capacitação."
+        },
+        {
+          "id_servico": "SRV-02",
+          "titulo": "Curso de Qualificação Profissional — Atendimento e Vendas",
+          "instituicao": "Instituto Oportunidade Local",
+          "categoria": "Qualificação",
+          "turno": "tarde",
+          "vagas_disponiveis": 8,
+          "score_compatibilidade": 97,
+          "prioridade": "Alta aderência",
+          "reforco_visibilidade": false,
+          "justificativa": "Formação prática focada em setores com alta rotatividade e contratação rápida na sua região."
+        }
+      ],
+      "proximo_passo_sugerido": "Reservar primeiro \"Orientação Profissional e Revisão de Currículo\" devido ao número reduzido de vagas (5).",
+      "_detalhe_regras": [
+        {
+          "id_servico": "SRV-01",
+          "palavras_chave_acertadas": 5,
+          "pontos_objetivo_70": 70,
+          "pontos_turno_20": 20,
+          "pontos_impacto_social_10": 8,
+          "reforco_visibilidade": true,
+          "score_ranking": 103
+        },
+        {
+          "id_servico": "SRV-03",
+          "palavras_chave_acertadas": 5,
+          "pontos_objetivo_70": 70,
+          "pontos_turno_20": 20,
+          "pontos_impacto_social_10": 9,
+          "reforco_visibilidade": false,
+          "score_ranking": 99
+        },
+        {
+          "id_servico": "SRV-02",
+          "palavras_chave_acertadas": 6,
+          "pontos_objetivo_70": 70,
+          "pontos_turno_20": 20,
+          "pontos_impacto_social_10": 7,
+          "reforco_visibilidade": false,
+          "score_ranking": 97
+        }
+      ]
+    }
+  },
+  {
+    "cenario": "Apoio social e jurídico",
+    "entrada": {
+      "cidadao": "Carlos Eduardo",
+      "situacao_atual": "Precisando de atendimento social ou jurídico",
+      "interesse_principal": "Apoio social e jurídico",
+      "turno_disponivel": "tarde",
+      "descricao_livre": "Preciso de atendimento social e apoio jurídico gratuito para regularizar documentos da família."
+    },
+    "saida": {
+      "agente": "Conecta-IA-v2",
+      "resumo_perfil": "Carlos Eduardo: precisando de atendimento social ou jurídico, interesse em apoio social e jurídico, disponibilidade: tarde.",
+      "recomendacoes": [
+        {
+          "id_servico": "SRV-06",
+          "titulo": "Plantão de Assistência Jurídica Gratuita",
+          "instituicao": "Defensoria Comunitária",
+          "categoria": "Serviço Jurídico",
+          "turno": "tarde",
+          "vagas_disponiveis": 4,
+          "score_compatibilidade": 86,
+          "prioridade": "Últimas vagas",
+          "reforco_visibilidade": false,
+          "justificativa": "Garante orientação jurídica gratuita para questões familiares, trabalhistas ou documentação civil."
+        },
+        {
+          "id_servico": "SRV-05",
+          "titulo": "Atendimento Social e Cadastro em Benefícios (CRAS Parceiro)",
+          "instituicao": "Núcleo de Apoio Familiar",
+          "categoria": "Atendimento Social",
+          "turno": "manha",
+          "vagas_disponiveis": 6,
+          "score_compatibilidade": 66,
+          "prioridade": "Compatível",
+          "reforco_visibilidade": false,
+          "justificativa": "Oferece acolhimento e orientação para acesso a programas sociais, regularização de documentos e rede de apoio."
+        }
+      ],
+      "proximo_passo_sugerido": "Reservar primeiro \"Plantão de Assistência Jurídica Gratuita\" devido ao número reduzido de vagas (4).",
+      "_detalhe_regras": [
+        {
+          "id_servico": "SRV-06",
+          "palavras_chave_acertadas": 4,
+          "pontos_objetivo_70": 56,
+          "pontos_turno_20": 20,
+          "pontos_impacto_social_10": 10,
+          "reforco_visibilidade": false,
+          "score_ranking": 86
+        },
+        {
+          "id_servico": "SRV-05",
+          "palavras_chave_acertadas": 4,
+          "pontos_objetivo_70": 56,
+          "pontos_turno_20": 0,
+          "pontos_impacto_social_10": 10,
+          "reforco_visibilidade": false,
+          "score_ranking": 66
+        }
+      ]
+    }
+  },
+  {
+    "cenario": "Renda com vocabulário do dia a dia (v1 × v2)",
+    "entrada": {
+      "cidadao": "Joana Souza",
+      "situacao_atual": "Buscando renda extra / empreender",
+      "interesse_principal": "Geração de renda",
+      "turno_disponivel": "noite",
+      "descricao_livre": "vendo artesanato e quero ganhar mais dinheiro"
+    },
+    "saida": {
+      "agente": "Conecta-IA-v2",
+      "resumo_perfil": "Joana Souza: buscando renda extra / empreender, interesse em geração de renda, disponibilidade: noite.",
+      "recomendacoes": [
+        {
+          "id_servico": "SRV-04",
+          "titulo": "Oficina de Empreendedorismo e Microcrédito Comunitário",
+          "instituicao": "Hub Cidadão",
+          "categoria": "Geração de Renda",
+          "turno": "noite",
+          "vagas_disponiveis": 12,
+          "score_compatibilidade": 97,
+          "prioridade": "Alta aderência",
+          "reforco_visibilidade": false,
+          "justificativa": "Ajuda a transformar habilidades práticas em fonte de renda própria com noções de preço, divulgação e gestão."
+        }
+      ],
+      "proximo_passo_sugerido": "Reservar \"Oficina de Empreendedorismo e Microcrédito Comunitário\", a opção de maior compatibilidade.",
+      "_detalhe_regras": [
+        {
+          "id_servico": "SRV-04",
+          "palavras_chave_acertadas": 5,
+          "pontos_objetivo_70": 70,
+          "pontos_turno_20": 20,
+          "pontos_impacto_social_10": 7,
+          "reforco_visibilidade": false,
+          "score_ranking": 97
+        }
+      ]
+    },
+    "saida_v1": {
+      "agente": "Conecta-IA-v1",
+      "resumo_perfil": "Joana Souza: buscando renda extra / empreender, interesse em geração de renda, disponibilidade: noite.",
+      "recomendacoes": [],
+      "proximo_passo_sugerido": "Nenhum serviço atingiu o score mínimo (60). Acionar o canal de acolhimento social geral da comunidade.",
+      "_detalhe_regras": []
+    }
+  },
+  {
+    "cenario": "Sem opção no turno pedido (Regra 5)",
+    "entrada": {
+      "cidadao": "João Pereira",
+      "situacao_atual": "Precisando de atendimento social ou jurídico",
+      "interesse_principal": "Apoio social e jurídico",
+      "turno_disponivel": "noite",
+      "descricao_livre": "preciso de ajuda jurídica mas só posso à noite"
+    },
+    "saida": {
+      "agente": "Conecta-IA-v2",
+      "resumo_perfil": "João Pereira: precisando de atendimento social ou jurídico, interesse em apoio social e jurídico, disponibilidade: noite.",
+      "recomendacoes": [
+        {
+          "id_servico": "SRV-06",
+          "titulo": "Plantão de Assistência Jurídica Gratuita",
+          "instituicao": "Defensoria Comunitária",
+          "categoria": "Serviço Jurídico",
+          "turno": "tarde",
+          "vagas_disponiveis": 4,
+          "score_compatibilidade": 52,
+          "prioridade": "Outro turno",
+          "reforco_visibilidade": false,
+          "justificativa": "Garante orientação jurídica gratuita para questões familiares, trabalhistas ou documentação civil."
+        }
+      ],
+      "proximo_passo_sugerido": "Não há opção no turno pedido. A mais próxima é \"Plantão de Assistência Jurídica Gratuita\" no turno da tarde; confirme se a pessoa consegue esse horário ou acione o acolhimento social.",
+      "_detalhe_regras": [
+        {
+          "id_servico": "SRV-06",
+          "palavras_chave_acertadas": 3,
+          "pontos_objetivo_70": 42,
+          "pontos_turno_20": 0,
+          "pontos_impacto_social_10": 10,
+          "reforco_visibilidade": false,
+          "score_ranking": 52
+        }
+      ]
+    },
+    "saida_v1": {
+      "agente": "Conecta-IA-v1",
+      "resumo_perfil": "João Pereira: precisando de atendimento social ou jurídico, interesse em apoio social e jurídico, disponibilidade: noite.",
+      "recomendacoes": [],
+      "proximo_passo_sugerido": "Nenhum serviço atingiu o score mínimo (60). Acionar o canal de acolhimento social geral da comunidade.",
+      "_detalhe_regras": []
+    }
+  },
+  {
+    "cenario": "Fora do catálogo → acolhimento",
+    "entrada": {
+      "cidadao": "Ana Lima",
+      "situacao_atual": "Querendo aprender novas habilidades",
+      "interesse_principal": "Geração de renda",
+      "turno_disponivel": "manha",
+      "descricao_livre": "quero aprender a tocar violão"
+    },
+    "saida": {
+      "agente": "Conecta-IA-v2",
+      "resumo_perfil": "Ana Lima: querendo aprender novas habilidades, interesse em geração de renda, disponibilidade: manhã.",
+      "recomendacoes": [],
+      "proximo_passo_sugerido": "Nenhum serviço atingiu o score mínimo (60). Acionar o canal de acolhimento social geral da comunidade.",
+      "_detalhe_regras": []
+    }
+  }
+]
