@@ -1,0 +1,7 @@
+﻿servico_id,titulo,instituicao,categoria,eixo,turno,sala,vagas_por_turma,impacto_social
+SRV-01,Curso Gratuito de Informática Básica e Pacote Office,Centro Comunitário Esperança,Capacitação Profissional,Capacitação profissional,manha,SALA-A,25,8
+SRV-02,Curso de Qualificação Profissional — Atendimento e Vendas,Instituto Oportunidade Local,Qualificação,Capacitação profissional,tarde,SALA-B,25,7
+SRV-03,Orientação Profissional e Revisão de Currículo,Casa do Trabalhador,Empregabilidade,Capacitação profissional,noite,SALA-C,25,9
+SRV-04,Oficina de Empreendedorismo e Microcrédito Comunitário,Hub Cidadão,Geração de Renda,Geração de renda,noite,SALA-B,24,7
+SRV-05,Atendimento Social e Cadastro em Benefícios (CRAS Parceiro),Núcleo de Apoio Familiar,Atendimento Social,Apoio social e jurídico,manha,SALA-C,15,10
+SRV-06,Plantão de Assistência Jurídica Gratuita,Defensoria Comunitária,Serviço Jurídico,Apoio social e jurídico,tarde,SALA-C,40,10

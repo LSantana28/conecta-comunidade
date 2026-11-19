@@ -1,0 +1,22 @@
+{
+  "arquivos": 361,
+  "lidos": 43635,
+  "validos": 43086,
+  "duplicados": 186,
+  "rejeitados": 363,
+  "datasNormalizadas": 109,
+  "motivos": {
+    "json_invalido": 88,
+    "perfil_hash_invalido": 3,
+    "sala_invalida": 197,
+    "temperatura_fora_da_faixa": 75
+  },
+  "porTipo": {
+    "busca": 1956,
+    "cancelamento": 34,
+    "leitura_iot": 40462,
+    "presenca": 260,
+    "reserva": 374
+  },
+  "taxaAproveitamento": 98.74
+}

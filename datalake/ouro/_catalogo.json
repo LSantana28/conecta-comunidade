@@ -1,0 +1,173 @@
+{
+  "gerado_em": "2026-11-19T20:35:21.381Z",
+  "duracao_ms": 500,
+  "periodo": {
+    "inicio": "2026-08-21",
+    "fim": "2026-11-18"
+  },
+  "camadas": {
+    "bronze": "bronze/<tipo>/dt=AAAA-MM-DD/*.jsonl",
+    "prata": "prata/<tipo>.jsonl",
+    "ouro": "ouro/<tabela>.csv|json"
+  },
+  "tabelas": {
+    "dim_servico": {
+      "linhas": 6,
+      "colunas": [
+        "servico_id",
+        "titulo",
+        "instituicao",
+        "categoria",
+        "eixo",
+        "turno",
+        "sala",
+        "vagas_por_turma",
+        "impacto_social"
+      ],
+      "tipo": "dimensão",
+      "descricao": "Serviços ofertados (curso, atendimento) com eixo temático, turno e sala",
+      "origem": "catálogo das instituições"
+    },
+    "dim_turma": {
+      "linhas": 18,
+      "colunas": [
+        "turma_id",
+        "servico_id",
+        "ciclo",
+        "inicio_inscricoes",
+        "fim_inscricoes",
+        "vagas"
+      ],
+      "tipo": "dimensão",
+      "descricao": "Turmas por ciclo de 30 dias e vagas ofertadas",
+      "origem": "catálogo + calendário de ciclos"
+    },
+    "dim_sala": {
+      "linhas": 3,
+      "colunas": [
+        "sala",
+        "capacidade"
+      ],
+      "tipo": "dimensão",
+      "descricao": "Salas monitoradas e capacidade",
+      "origem": "catálogo"
+    },
+    "dim_data": {
+      "linhas": 90,
+      "colunas": [
+        "data",
+        "ano",
+        "mes",
+        "dia",
+        "dia_semana",
+        "nome_dia",
+        "fim_de_semana",
+        "semana"
+      ],
+      "tipo": "dimensão",
+      "descricao": "Calendário (dia, mês, dia da semana, semana)",
+      "origem": "gerada pelo ETL"
+    },
+    "fato_busca": {
+      "linhas": 1956,
+      "colunas": [
+        "busca_id",
+        "data",
+        "hora",
+        "dia_semana",
+        "origem",
+        "perfil_hash",
+        "situacao",
+        "interesse",
+        "turno",
+        "qtd_recomendacoes",
+        "sem_resultado",
+        "turno_atendido",
+        "top1_servico",
+        "top1_score"
+      ],
+      "tipo": "fato",
+      "descricao": "Uma linha por busca no agente IA",
+      "origem": "prata/busca"
+    },
+    "fato_recomendacao": {
+      "linhas": 2494,
+      "colunas": [
+        "busca_id",
+        "data",
+        "servico_id",
+        "posicao",
+        "score"
+      ],
+      "tipo": "fato",
+      "descricao": "Serviços recomendados em cada busca (posição e score)",
+      "origem": "prata/busca"
+    },
+    "fato_reserva": {
+      "linhas": 374,
+      "colunas": [
+        "reserva_id",
+        "data",
+        "hora",
+        "dia_semana",
+        "origem",
+        "perfil_hash",
+        "servico_id",
+        "turma_id",
+        "resultado",
+        "status_final",
+        "valida",
+        "via_recomendacao",
+        "busca_id",
+        "minutos_desde_busca"
+      ],
+      "tipo": "fato",
+      "descricao": "Tentativas de reserva com status final (compareceu, faltou, cancelada, sem vaga) e atribuição à recomendação",
+      "origem": "prata/reserva + cancelamento + presenca + busca"
+    },
+    "fato_ocupacao_hora": {
+      "linhas": 3390,
+      "colunas": [
+        "data",
+        "hora",
+        "dia_semana",
+        "sala",
+        "capacidade",
+        "ocupacao_media",
+        "ocupacao_max",
+        "taxa_ocupacao",
+        "minutos_lotada",
+        "entradas",
+        "leituras",
+        "temperatura_media",
+        "temperatura_max",
+        "saidas_sem_entrada"
+      ],
+      "tipo": "fato",
+      "descricao": "Ocupação física por sala e hora, reconstruída das passagens do sensor (média ponderada no tempo) + temperatura",
+      "origem": "prata/leitura_iot"
+    }
+  },
+  "qualidade": {
+    "arquivos": 361,
+    "lidos": 43635,
+    "validos": 43086,
+    "duplicados": 186,
+    "rejeitados": 363,
+    "datasNormalizadas": 109,
+    "motivos": {
+      "json_invalido": 88,
+      "perfil_hash_invalido": 3,
+      "sala_invalida": 197,
+      "temperatura_fora_da_faixa": 75
+    },
+    "porTipo": {
+      "busca": 1956,
+      "cancelamento": 34,
+      "leitura_iot": 40462,
+      "presenca": 260,
+      "reserva": 374
+    },
+    "taxaAproveitamento": 98.74
+  }
+}
