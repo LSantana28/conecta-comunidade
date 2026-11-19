@@ -1,7 +1,7 @@
 // TELA 5 — Login do gestor (protege o dashboard)
 import { api } from "../api.js";
 
-export function render(el) {
+export function render(el, { destinoAposLogin = "dashboard" } = {}) {
   el.innerHTML = `
     <section class="panel login">
       <h2>Acesso do gestor</h2>
@@ -22,7 +22,7 @@ export function render(el) {
     erro.hidden = true;
     try {
       await api.login(el.querySelector("#usuario").value.trim(), el.querySelector("#senha").value);
-      location.hash = "#/dashboard";
+      location.hash = "#/" + destinoAposLogin;
     } catch (e) {
       erro.textContent = e.message;
       erro.hidden = false;

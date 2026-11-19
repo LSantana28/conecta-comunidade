@@ -29,6 +29,7 @@ export const api = {
   cancelar: protocolo => chamar("POST", `/api/reservas/${encodeURIComponent(protocolo)}/cancelar`),
   salas: () => chamar("GET", "/api/iot/salas"),
   dashboard: () => chamar("GET", "/api/admin/dashboard", null, true),
+  analises: params => chamar("GET", `/api/admin/analises?${params}`, null, true),
   async login(usuario, senha) {
     const { token } = await chamar("POST", "/api/auth/login", { usuario, senha });
     armazenamento.gravar(CHAVE_TOKEN, token, "sessao");
