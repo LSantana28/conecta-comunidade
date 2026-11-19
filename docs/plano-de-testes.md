@@ -22,8 +22,8 @@
 | CT08c | Integração (segurança) | Erros de entrada na API | Campos inválidos, JSON malformado, corpo de 20 KB | 400 com lista de campos; 400; 413 | ✅ |
 | CT09 | Integração (segurança) | Autenticação do dashboard | Sem token, token falso, senha errada, senha certa | 401, 401, 401, 200; nomes mascarados para o gestor | ✅ |
 | CT10 | Unitário (segurança) | Senha e token | Hash scrypt; token adulterado, com outro segredo ou expirado | Senha nunca em texto puro; tokens inválidos rejeitados | ✅ |
-| CT11 | Integração (IoT) | Leituras dos sensores | Leitura sem chave; 10 entradas na SALA-C; 31,5 °C; 1 saída | 401; ocupação 10 com alerta de lotação; alerta de temperatura; ocupação 9 refletida no catálogo | ✅ |
-| CT12 | Unitário (IoT) | Simulador | 2.000 leituras geradas | Todas válidas; ocupação nunca negativa; 2 tipos de sensor | ✅ |
+| CT11 | Integração (IoT) | Leituras dos sensores | Leitura sem chave; 10 entradas na SALA-C; 11ª entrada; 31,5 °C; saídas | 401; ocupação 10 = "Lotação máxima"; 11 = "Lotação excedida"; alerta de temperatura; ocupação refletida no catálogo | ✅ |
+| CT12 | Unitário (IoT) | Simulador | 2.000 leituras geradas | Todas válidas; ocupação sempre entre 0 e a capacidade; 2 tipos de sensor | ✅ |
 | CT12b | Unitário (IoT) | Validador de leituras | Sala, sensor e temperatura inválidos | Rejeitados; comparação da chave em tempo constante | ✅ |
 | CT13 | Unitário (segurança) | Rate limiter | 4 chamadas com limite 3 | 4ª bloqueada; libera na janela seguinte | ✅ |
 | CT13b | Integração (segurança) | Força bruta no login | 11 tentativas em 1 minuto | 11ª = 429 | ✅ |

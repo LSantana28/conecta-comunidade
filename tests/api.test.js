@@ -90,7 +90,7 @@ describe("API — segurança e gestão", () => {
     assert.ok(reservas.dados.reservas.every(r => r.primeiroNome.includes("*")), "nomes mascarados para o gestor");
   });
 
-  test("CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação e temperatura", async () => {
+  test("CT11 — IoT: sem chave 401; com chave atualiza ocupação e gera alertas de lotação, excesso e temperatura", async () => {
     const semChave = await req("POST", "/api/iot/leituras", { sala: "SALA-C", sensor: "fluxo", evento: "entrada" });
     assert.equal(semChave.status, 401);
     const H = { "X-Device-Key": "chave-teste" };
@@ -99,6 +99,10 @@ describe("API — segurança e gestão", () => {
     assert.equal(r.status, 201);
     assert.equal(r.dados.sala.ocupacao, 10);
     assert.ok(r.dados.sala.alertas.includes("Lotação máxima atingida"));
+    r = await req("POST", "/api/iot/leituras", { sala: "SALA-C", sensor: "fluxo", evento: "entrada" }, H);
+    assert.equal(r.dados.sala.ocupacao, 11, "sensor registra a contagem real");
+    assert.ok(r.dados.sala.alertas.some(a => a.startsWith("Lotação excedida: 1 pessoa")));
+    r = await req("POST", "/api/iot/leituras", { sala: "SALA-C", sensor: "fluxo", evento: "saida" }, H);
     r = await req("POST", "/api/iot/leituras", { sala: "SALA-C", sensor: "temperatura", valor: 31.5 }, H);
     assert.ok(r.dados.sala.alertas.some(a => a.startsWith("Temperatura acima")));
     r = await req("POST", "/api/iot/leituras", { sala: "SALA-C", sensor: "fluxo", evento: "saida" }, H);
