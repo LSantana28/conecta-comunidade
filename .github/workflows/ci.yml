@@ -1,4 +1,4 @@
-name: CI/CD — Conecta Comunidade
+﻿name: CI/CD â€” Conecta Comunidade
 
 on:
   push:
@@ -14,36 +14,36 @@ jobs:
       matrix:
         node: [22, 24]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node }}
-      - name: Verificação de sintaxe
+      - name: VerificaÃ§Ã£o de sintaxe
         run: for f in $(find src scripts public/js -name '*.js'); do node --check "$f"; done
-      - name: Rodar testes (unitários + integração)
+      - name: Rodar testes (unitÃ¡rios + integraÃ§Ã£o)
         run: npm run test:ci
-      - name: Publicar relatório de testes
+      - name: Publicar relatÃ³rio de testes
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: relatorio-testes-node-${{ matrix.node }}
           path: test-results.xml
 
   dados:
-    name: Pipeline de dados (bronze → prata → ouro)
+    name: Pipeline de dados (bronze â†’ prata â†’ ouro)
     needs: testes
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - name: Gerar histórico e rodar o ETL
+      - name: Gerar histÃ³rico e rodar o ETL
         run: rm -rf datalake/bronze datalake/prata && npm run dados
-      - name: Checar qualidade mínima (>= 95% dos registros aproveitados)
+      - name: Checar qualidade mÃ­nima (>= 95% dos registros aproveitados)
         run: node -e "const q=require('./datalake/ouro/_qualidade.json'); console.log(q); if(q.taxaAproveitamento<95) process.exit(1)"
-      - name: Publicar camada ouro e relatório de qualidade
-        uses: actions/upload-artifact@v4
+      - name: Publicar camada ouro e relatÃ³rio de qualidade
+        uses: actions/upload-artifact@v5
         with:
           name: datalake-ouro
           path: |
@@ -55,8 +55,8 @@ jobs:
     needs: [testes, dados]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build (o estágio de testes roda dentro do Dockerfile)
+      - uses: actions/checkout@v5
+      - name: Build (o estÃ¡gio de testes roda dentro do Dockerfile)
         run: docker build -t conecta-comunidade:${{ github.sha }} .
       - name: Subir container
         run: |
@@ -71,14 +71,14 @@ jobs:
             [ "$(docker inspect -f '{{.State.Health.Status}}' conecta)" = "healthy" ] && break
             sleep 2
           done
-          docker inspect -f 'Status de saúde: {{.State.Health.Status}}' conecta
+          docker inspect -f 'Status de saÃºde: {{.State.Health.Status}}' conecta
       - name: Smoke test
         run: BASE_URL=http://localhost:3000 node scripts/smoke.js
       - name: Logs do container
         if: always()
         run: docker logs conecta
 
-  # Entrega contínua: publica a imagem no GitHub Container Registry quando entra na main
+  # Entrega contÃ­nua: publica a imagem no GitHub Container Registry quando entra na main
   publicar:
     name: Publicar imagem (main)
     needs: docker
@@ -88,7 +88,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
