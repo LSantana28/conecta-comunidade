@@ -1,14 +1,13 @@
 GLOBAL SOLUTION 2026/2 - CITIZENTECH - TURMA 4ESOA
 
 Projeto: Conecta Comunidade
-Nome do grupo: [PREENCHER]
+Nome do grupo: Vaga Certa
 
 Integrantes (RM - Nome completo):
-RM[PREENCHER] - [PREENCHER]
-RM[PREENCHER] - [PREENCHER]
-RM[PREENCHER] - [PREENCHER]
-RM[PREENCHER] - [PREENCHER]
-RM[PREENCHER] - [PREENCHER]
+RM98693 - Samuel Giron Marciliano
+RM550851 - Lucas Santana de Oliveira
+RM99860 - Allan Silva Marcelino
+RM551430 - Yohana Bispo Menezes
 
 Link do vídeo pitch (acesso público): [PREENCHER]
 Repositório: https://github.com/LSantana28/conecta-comunidade
