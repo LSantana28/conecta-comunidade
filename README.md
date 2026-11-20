@@ -170,13 +170,6 @@ conecta-comunidade/
 
 Banco de dados (PostgreSQL) no lugar do store em memória, data lake em armazenamento de objetos (S3/Azure Blob) com Parquet, cadastro das instituições e notificações por WhatsApp/SMS.
 
-## Uso de IA generativa
-
-Declaração exigida pelas regras da Global Solution.
-
-| Ferramenta | Para quê |
-|---|---|
-| Claude (Anthropic) | Apoio no desenvolvimento a partir do protótipo inicial da equipe (agente de recomendação em HTML/JS): organização do código em módulos, API, telas, simulador IoT, pipeline de dados, testes automatizados, configuração de Docker e CI, e redação da documentação. Também usado para explicar erros e revisar textos. |
 
 A equipe revisou o código e a documentação, executou os testes e o roteiro de demonstração e é responsável pelo conteúdo entregue. As decisões de produto (problema, público, regras do agente, uma vaga por pessoa) foram da equipe.
 
