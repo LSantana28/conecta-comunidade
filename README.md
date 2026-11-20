@@ -4,7 +4,7 @@
 
 Plataforma que conecta cidadãos a vagas em **cursos gratuitos, capacitações, atendimentos sociais e serviços comunitários**. Um agente de IA recomenda as vagas mais compatíveis com o perfil da pessoa e sensores IoT medem a ocupação das salas. Todo evento alimenta um **data lake** (bronze → prata → ouro), e um dashboard analítico transforma esses dados em decisões: onde abrir turmas, o que divulgar e qual sala climatizar.
 
-> **Vídeo pitch:** [PREENCHER COM O LINK PÚBLICO DO VÍDEO]
+> **Vídeo pitch:** [LINK PÚBLICO DO VÍDEO](https://docs.google.com/videos/d/1YX4MJg2Ghfv9gKMvCdrSGGlR2cmxQNQSLAxfmKya3QI/play?usp=sharing)]
 > **Entregáveis (arquitetura, prints e evidências de cada área):** [`Conecta-Comunidade-Entregaveis.pdf`](Conecta-Comunidade-Entregaveis.pdf)
 > **Grupo Vaga Certa:** Samuel Giron Marciliano (RM98693), Lucas Santana de Oliveira (RM550851), Allan Silva Marcelino (RM99860) e Yohana Bispo Menezes (RM551430). Dados da entrega em [`ENTREGA.txt`](ENTREGA.txt) · **Roteiro do pitch:** [`docs/roteiro-pitch.md`](docs/roteiro-pitch.md)
 
