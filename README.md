@@ -6,7 +6,7 @@ Plataforma que conecta cidadãos a vagas em **cursos gratuitos, capacitações, 
 
 > **Vídeo pitch:** [PREENCHER COM O LINK PÚBLICO DO VÍDEO]
 > **Entregáveis (arquitetura, prints e evidências de cada área):** [`Conecta-Comunidade-Entregaveis.pdf`](Conecta-Comunidade-Entregaveis.pdf)
-> **Integrantes:** veja [`ENTREGA.txt`](ENTREGA.txt) · **Roteiro do pitch:** [`docs/roteiro-pitch.md`](docs/roteiro-pitch.md)
+> **Grupo Vaga Certa:** Samuel Giron Marciliano (RM98693), Lucas Santana de Oliveira (RM550851), Allan Silva Marcelino (RM99860) e Yohana Bispo Menezes (RM551430). Dados da entrega em [`ENTREGA.txt`](ENTREGA.txt) · **Roteiro do pitch:** [`docs/roteiro-pitch.md`](docs/roteiro-pitch.md)
 
 ![Arquitetura](docs/arquitetura.png)
 
