@@ -9,7 +9,7 @@ RM550851 - Lucas Santana de Oliveira
 RM99860 - Allan Silva Marcelino
 RM551430 - Yohana Bispo Menezes
 
-Link do vídeo pitch (acesso público): [PREENCHER]
+Link do vídeo pitch (acesso público): https://docs.google.com/videos/d/1YX4MJg2Ghfv9gKMvCdrSGGlR2cmxQNQSLAxfmKya3QI/play?usp=sharing
 Repositório: https://github.com/LSantana28/conecta-comunidade
 
 PDF com os entregáveis de cada parte: Conecta-Comunidade-Entregaveis.pdf (raiz do projeto)
